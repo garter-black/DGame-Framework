@@ -228,3 +228,46 @@ message CSFrameCmdGmInfo
 {
     string GmString = 1;
 }
+
+/// 单人战斗：请求开局。种子和难度参数由服务端决定，客户端不能自选。
+message C2G_SoloBattleStartRequest // IRequest,G2C_SoloBattleStartResponse
+{
+}
+
+message G2C_SoloBattleStartResponse // IResponse
+{
+    long BattleId = 1;
+    int Seed = 2;
+    int EnemyCap = 3;
+    int SpawnPerWave = 4;
+    int SpawnIntervalFrames = 5;
+}
+
+/// 单人战斗：按顺序上传一批指令（BattleInputCodec 打包）和该批最后一帧的状态哈希。
+message C2G_SoloBattleInputsRequest // IRequest,G2C_SoloBattleInputsResponse
+{
+    long BattleId = 1;
+    int StartFrame = 2;
+    repeatedArray byte Inputs = 3;
+    ulong CheckpointHash = 4;
+}
+
+message G2C_SoloBattleInputsResponse // IResponse
+{
+    int VerifiedFrame = 1;
+}
+
+/// 单人战斗：结算。须先上传完全部指令；结果以服务端重放为准。
+message C2G_SoloBattleEndRequest // IRequest,G2C_SoloBattleEndResponse
+{
+    long BattleId = 1;
+    int FinalFrame = 2;
+    ulong FinalHash = 3;
+}
+
+message G2C_SoloBattleEndResponse // IResponse
+{
+    int Frame = 1;
+    int Kills = 2;
+    bool PlayerDied = 3;
+}

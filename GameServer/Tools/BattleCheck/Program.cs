@@ -23,6 +23,7 @@ if (!benchOnly)
     Check("lint", LintSurvivorSources);
     Check("determinism", CheckDeterminism);
     Check("sensitivity", CheckSensitivity);
+    Check("verifier", CheckVerifier);
 }
 
 Check("bench", Benchmark);
@@ -176,6 +177,74 @@ string CheckSensitivity()
     if (Run(1, -1) != baseline) return "same run produced different hash";
     if (Run(2, -1) == baseline) return "different seed produced same hash";
     if (Run(1, 300) == baseline) return "changing one input produced same hash";
+    return null;
+}
+
+// 服务端校验：诚实客户端全程通过；改指令、改状态、跳批次、超大批次都被拦下。
+string CheckVerifier()
+{
+    const int batch = BattleConfig.TICK_RATE;
+    var settings = BattleSettings.Default(seed: 4242, playerCount: 1);
+
+    // 模拟客户端：本地跑并录像，返回 (录像, 每批末尾的哈希)。cheat 在本地模拟上作弊，录像不变。
+    (BattleReplay replay, List<ulong> hashes) PlayClient(int frames, Action<BattleSimulation, int> cheat)
+    {
+        var sim = new BattleSimulation(settings);
+        var replay = new BattleReplay(settings);
+        var hashes = new List<ulong>();
+        var inputs = new BattleInput[1];
+        for (var f = 1; f <= frames; f++)
+        {
+            inputs[0] = new BattleInput((f / 40) % 2 == 0 ? 100 : -100, (f / 25) % 2 == 0 ? 60 : -60);
+            replay.Record(inputs);
+            sim.Tick(inputs);
+            cheat?.Invoke(sim, f);
+            if (f % batch == 0) hashes.Add(sim.ComputeHash());
+        }
+
+        return (replay, hashes);
+    }
+
+    // 模拟服务端：逐批校验，返回第一个非 Ok 的结果和批次号。
+    (VerifyResult result, int batchIndex) Verify(BattleReplay replay, List<ulong> hashes, Func<int, byte[], byte[]> tamper = null, int skipBatch = -1)
+    {
+        var verifier = new BattleVerifier(settings);
+        for (var b = 0; b < hashes.Count; b++)
+        {
+            if (b == skipBatch) continue;
+            var packed = BattleInputCodec.Pack(replay.Frames, b * batch, batch, 1);
+            packed = tamper?.Invoke(b, packed) ?? packed;
+            var r = verifier.ApplyBatch(b * batch + 1, packed, hashes[b]);
+            if (r != VerifyResult.Ok) return (r, b);
+        }
+
+        var finalHash = hashes[hashes.Count - 1];
+        return (verifier.Finish(hashes.Count * batch, finalHash), hashes.Count);
+    }
+
+    var (honestReplay, honestHashes) = PlayClient(1200, null);
+    var honest = Verify(honestReplay, honestHashes);
+    if (honest.result != VerifyResult.Ok) return $"honest client rejected: {honest.result} at batch {honest.batchIndex}";
+
+    // 上传的指令和本地实际用的不一样（例如篡改移动）。
+    var tampered = Verify(honestReplay, honestHashes, (b, p) => { if (b == 10) p[4] = unchecked((byte)(sbyte)-p[4]); return p; });
+    if (tampered.result != VerifyResult.HashMismatch) return $"tampered input not caught: {tampered.result}";
+
+    // 修改本地内存：第 300 帧给自己加 50 击杀。
+    var (cheatReplay, cheatHashes) = PlayClient(1200, (sim, f) => { if (f == 300) sim.State.TotalKills += 50; });
+    var memoryCheat = Verify(cheatReplay, cheatHashes);
+    if (memoryCheat.result != VerifyResult.HashMismatch || memoryCheat.batchIndex != 14) return $"memory cheat not caught at batch 14: {memoryCheat.result}@{memoryCheat.batchIndex}";
+
+    var skipped = Verify(honestReplay, honestHashes, skipBatch: 3);
+    if (skipped.result != VerifyResult.NotSequential) return $"skipped batch not caught: {skipped.result}";
+
+    var oversize = new BattleVerifier(settings).ApplyBatch(1, new byte[(BattleInputCodec.MAX_FRAMES_PER_BATCH + 1) * 2], 0);
+    if (oversize != VerifyResult.InvalidInput) return $"oversize batch not caught: {oversize}";
+
+    var wrongFinal = new BattleVerifier(settings).Finish(5, 0);
+    if (wrongFinal != VerifyResult.InvalidInput) return $"wrong final frame not caught: {wrongFinal}";
+
+    Console.WriteLine($"  honest {honestHashes.Count} batches OK; tampered input, memory cheat, skipped/oversize batch all rejected");
     return null;
 }
 

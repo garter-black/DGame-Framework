@@ -1641,6 +1641,306 @@ namespace Fantasy
         public string GmString { get; set; }
     }
     /// <summary>
+    /// 单人战斗：请求开局。种子和难度参数由服务端决定，客户端不能自选。
+    /// </summary>
+    [Serializable]
+    [ProtoContract]
+    public partial class C2G_SoloBattleStartRequest : AMessage, IRequest
+    {
+        public static C2G_SoloBattleStartRequest Create(bool autoReturn = true)
+        {
+            var c2G_SoloBattleStartRequest = MessageObjectPool<C2G_SoloBattleStartRequest>.Rent();
+            c2G_SoloBattleStartRequest.AutoReturn = autoReturn;
+            
+            if (!autoReturn)
+            {
+                c2G_SoloBattleStartRequest.SetIsPool(false);
+            }
+            
+            return c2G_SoloBattleStartRequest;
+        }
+        
+        public void Return()
+        {
+            if (!AutoReturn)
+            {
+                SetIsPool(true);
+                AutoReturn = true;
+            }
+            else if (!IsPool())
+            {
+                return;
+            }
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!IsPool()) return; 
+            MessageObjectPool<C2G_SoloBattleStartRequest>.Return(this);
+        }
+        public uint OpCode() { return OuterOpcode.C2G_SoloBattleStartRequest; } 
+        [ProtoIgnore]
+        public G2C_SoloBattleStartResponse ResponseType { get; set; }
+    }
+    [Serializable]
+    [ProtoContract]
+    public partial class G2C_SoloBattleStartResponse : AMessage, IResponse
+    {
+        public static G2C_SoloBattleStartResponse Create(bool autoReturn = true)
+        {
+            var g2C_SoloBattleStartResponse = MessageObjectPool<G2C_SoloBattleStartResponse>.Rent();
+            g2C_SoloBattleStartResponse.AutoReturn = autoReturn;
+            
+            if (!autoReturn)
+            {
+                g2C_SoloBattleStartResponse.SetIsPool(false);
+            }
+            
+            return g2C_SoloBattleStartResponse;
+        }
+        
+        public void Return()
+        {
+            if (!AutoReturn)
+            {
+                SetIsPool(true);
+                AutoReturn = true;
+            }
+            else if (!IsPool())
+            {
+                return;
+            }
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!IsPool()) return; 
+            ErrorCode = 0;
+            BattleId = default;
+            Seed = default;
+            EnemyCap = default;
+            SpawnPerWave = default;
+            SpawnIntervalFrames = default;
+            MessageObjectPool<G2C_SoloBattleStartResponse>.Return(this);
+        }
+        public uint OpCode() { return OuterOpcode.G2C_SoloBattleStartResponse; } 
+        [ProtoMember(1)]
+        public uint ErrorCode { get; set; }
+        [ProtoMember(2)]
+        public long BattleId { get; set; }
+        [ProtoMember(3)]
+        public int Seed { get; set; }
+        [ProtoMember(4)]
+        public int EnemyCap { get; set; }
+        [ProtoMember(5)]
+        public int SpawnPerWave { get; set; }
+        [ProtoMember(6)]
+        public int SpawnIntervalFrames { get; set; }
+    }
+    /// <summary>
+    /// 单人战斗：按顺序上传一批指令（BattleInputCodec 打包）和该批最后一帧的状态哈希。
+    /// </summary>
+    [Serializable]
+    [ProtoContract]
+    public partial class C2G_SoloBattleInputsRequest : AMessage, IRequest
+    {
+        public static C2G_SoloBattleInputsRequest Create(bool autoReturn = true)
+        {
+            var c2G_SoloBattleInputsRequest = MessageObjectPool<C2G_SoloBattleInputsRequest>.Rent();
+            c2G_SoloBattleInputsRequest.AutoReturn = autoReturn;
+            
+            if (!autoReturn)
+            {
+                c2G_SoloBattleInputsRequest.SetIsPool(false);
+            }
+            
+            return c2G_SoloBattleInputsRequest;
+        }
+        
+        public void Return()
+        {
+            if (!AutoReturn)
+            {
+                SetIsPool(true);
+                AutoReturn = true;
+            }
+            else if (!IsPool())
+            {
+                return;
+            }
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!IsPool()) return; 
+            BattleId = default;
+            StartFrame = default;
+            Inputs = null;
+            CheckpointHash = default;
+            MessageObjectPool<C2G_SoloBattleInputsRequest>.Return(this);
+        }
+        public uint OpCode() { return OuterOpcode.C2G_SoloBattleInputsRequest; } 
+        [ProtoIgnore]
+        public G2C_SoloBattleInputsResponse ResponseType { get; set; }
+        [ProtoMember(1)]
+        public long BattleId { get; set; }
+        [ProtoMember(2)]
+        public int StartFrame { get; set; }
+        [ProtoMember(3)]
+        public byte[] Inputs { get; set; }
+        [ProtoMember(4)]
+        public ulong CheckpointHash { get; set; }
+    }
+    [Serializable]
+    [ProtoContract]
+    public partial class G2C_SoloBattleInputsResponse : AMessage, IResponse
+    {
+        public static G2C_SoloBattleInputsResponse Create(bool autoReturn = true)
+        {
+            var g2C_SoloBattleInputsResponse = MessageObjectPool<G2C_SoloBattleInputsResponse>.Rent();
+            g2C_SoloBattleInputsResponse.AutoReturn = autoReturn;
+            
+            if (!autoReturn)
+            {
+                g2C_SoloBattleInputsResponse.SetIsPool(false);
+            }
+            
+            return g2C_SoloBattleInputsResponse;
+        }
+        
+        public void Return()
+        {
+            if (!AutoReturn)
+            {
+                SetIsPool(true);
+                AutoReturn = true;
+            }
+            else if (!IsPool())
+            {
+                return;
+            }
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!IsPool()) return; 
+            ErrorCode = 0;
+            VerifiedFrame = default;
+            MessageObjectPool<G2C_SoloBattleInputsResponse>.Return(this);
+        }
+        public uint OpCode() { return OuterOpcode.G2C_SoloBattleInputsResponse; } 
+        [ProtoMember(1)]
+        public uint ErrorCode { get; set; }
+        [ProtoMember(2)]
+        public int VerifiedFrame { get; set; }
+    }
+    /// <summary>
+    /// 单人战斗：结算。须先上传完全部指令；结果以服务端重放为准。
+    /// </summary>
+    [Serializable]
+    [ProtoContract]
+    public partial class C2G_SoloBattleEndRequest : AMessage, IRequest
+    {
+        public static C2G_SoloBattleEndRequest Create(bool autoReturn = true)
+        {
+            var c2G_SoloBattleEndRequest = MessageObjectPool<C2G_SoloBattleEndRequest>.Rent();
+            c2G_SoloBattleEndRequest.AutoReturn = autoReturn;
+            
+            if (!autoReturn)
+            {
+                c2G_SoloBattleEndRequest.SetIsPool(false);
+            }
+            
+            return c2G_SoloBattleEndRequest;
+        }
+        
+        public void Return()
+        {
+            if (!AutoReturn)
+            {
+                SetIsPool(true);
+                AutoReturn = true;
+            }
+            else if (!IsPool())
+            {
+                return;
+            }
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!IsPool()) return; 
+            BattleId = default;
+            FinalFrame = default;
+            FinalHash = default;
+            MessageObjectPool<C2G_SoloBattleEndRequest>.Return(this);
+        }
+        public uint OpCode() { return OuterOpcode.C2G_SoloBattleEndRequest; } 
+        [ProtoIgnore]
+        public G2C_SoloBattleEndResponse ResponseType { get; set; }
+        [ProtoMember(1)]
+        public long BattleId { get; set; }
+        [ProtoMember(2)]
+        public int FinalFrame { get; set; }
+        [ProtoMember(3)]
+        public ulong FinalHash { get; set; }
+    }
+    [Serializable]
+    [ProtoContract]
+    public partial class G2C_SoloBattleEndResponse : AMessage, IResponse
+    {
+        public static G2C_SoloBattleEndResponse Create(bool autoReturn = true)
+        {
+            var g2C_SoloBattleEndResponse = MessageObjectPool<G2C_SoloBattleEndResponse>.Rent();
+            g2C_SoloBattleEndResponse.AutoReturn = autoReturn;
+            
+            if (!autoReturn)
+            {
+                g2C_SoloBattleEndResponse.SetIsPool(false);
+            }
+            
+            return g2C_SoloBattleEndResponse;
+        }
+        
+        public void Return()
+        {
+            if (!AutoReturn)
+            {
+                SetIsPool(true);
+                AutoReturn = true;
+            }
+            else if (!IsPool())
+            {
+                return;
+            }
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!IsPool()) return; 
+            ErrorCode = 0;
+            Frame = default;
+            Kills = default;
+            PlayerDied = default;
+            MessageObjectPool<G2C_SoloBattleEndResponse>.Return(this);
+        }
+        public uint OpCode() { return OuterOpcode.G2C_SoloBattleEndResponse; } 
+        [ProtoMember(1)]
+        public uint ErrorCode { get; set; }
+        [ProtoMember(2)]
+        public int Frame { get; set; }
+        [ProtoMember(3)]
+        public int Kills { get; set; }
+        [ProtoMember(4)]
+        public bool PlayerDied { get; set; }
+    }
+    /// <summary>
     /// 查询功能开放列表
     /// </summary>
     [Serializable]

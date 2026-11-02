@@ -39,4 +39,10 @@ public static class ErrorCode
     public const uint ROOM_ALREADY_JOINED = 4003; // 玩家已在房间中
     public const uint ROOM_PLAYER_COUNT_INVALID = 4004; // 房间玩家数量配置无效
     public const uint ROOM_CREATE_FAILED = 4005; // 房间创建失败
+    // 单人战斗校验
+    public const uint BATTLE_NOT_FOUND = 5001; // 战斗不存在或已结束
+    public const uint BATTLE_FRAME_NOT_SEQUENTIAL = 5002; // 指令批次帧号不连续
+    public const uint BATTLE_INPUT_INVALID = 5003; // 指令数据或结算帧号不合法
+    public const uint BATTLE_TOO_FAST = 5004; // 帧数超过真实经过时间（加速）
+    public const uint BATTLE_HASH_MISMATCH = 5005; // 状态哈希不一致（不同步或作弊）
 }

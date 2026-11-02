@@ -12,6 +12,44 @@
 
 数据流：`BattleInput[]`（每帧每人 2 字节）→ `BattleSimulation.Tick` → `BattleState`（数组存放）→ 表现层按 `PrevPos`/`Pos` 插值渲染。表现层只读状态，绝不回写。
 
+## 单人战斗服务端校验
+
+入口：登录后主界面不在房间时，"进入战斗"按钮开始单人战斗（`MainPage.OnClickStartBtn`）。
+
+```
+客户端 SoloBattleMgr                       服务端 Gate（SoloBattleComponent 挂在 Session 上）
+C2G_SoloBattleStartRequest      ──────▶   生成种子和难度参数，创建 BattleVerifier
+                                ◀──────   BattleId / Seed / EnemyCap / ...
+本地跑模拟，每 20 帧（1 秒）：
+C2G_SoloBattleInputsRequest     ──────▶   检查帧数 ≤ 真实经过时间×20 + 60（防加速）
+  起始帧 + 打包指令 + 末帧哈希              重放这批指令，核对哈希
+                                ◀──────   已校验帧号（失败则作废本局）
+死亡或按 Esc：补传剩余指令，然后
+C2G_SoloBattleEndRequest        ──────▶   核对最终帧和哈希，结果取服务端状态
+                                ◀──────   帧数 / 击杀 / 是否阵亡   ← 发奖、排行榜接在服务端这里
+```
+
+| 位置 | 内容 |
+|---|---|
+| `GameBattle/Survivor/BattleVerifier.cs` | 校验核心（共享）：按序吃批次、重放、核对哈希。联机房间复用它 |
+| `GameBattle/Survivor/BattleInputCodec.cs` | 指令打包，每帧每人 2 字节，单批上限 200 帧 |
+| `GameServer/.../Gate/System/SoloBattleComponentSystem.cs` | 开局、防加速、失败作废 |
+| `GameServer/.../Gate/Handler/C2G_SoloBattle*Handler.cs` | 三个请求的处理 |
+| `GameLogic/BattleSys/Survivor/SoloBattleMgr.cs` | 客户端流程（数据中心模块，自动注册） |
+| `GameLogic/BattleSys/Survivor/SurvivorBattleView.cs` | 表现层，沙盒和联网战斗共用 |
+
+能拦住的作弊（BattleCheck 离线测试 + 实机测试）：篡改上传指令、修改本地内存（如击杀数）、跳批次、超大批次、加速。错误码 5001~5005 见 `ErrorCode.cs`。
+
+断线即作废（组件挂在 Session 上）；断线续战以后在这里补。
+
+以后做联机：服务端把"一个玩家的批次"换成"房间每帧收集所有人的指令并广播"，仍用 `BattleVerifier` 重放；客户端把 `LocalBattleDriver` 换成按广播帧推进的驱动，表现层不变。
+
+## 协议
+
+- 协议源：`GameServer/Tools/NetworkProtocol/Outer/BattleMessage.proto`；导出：在 `GameServer/Tools/ProtocolExportTool` 执行 `dotnet Fantasy.ProtocolExportTool.dll export --silent`，生成文件不要手改。
+- 项目自带导出工具是 2025.2.1414 版：**不支持 `bytes`/`byte[]`**，字节数组写成 `repeatedArray byte`。
+- 导出会按文件顺序重新编号，新增消息会让后面消息的 opcode 后移；协议改动必须客户端和服务端同时发布。
+
 ## 加一个新玩法
 
 1. 在 `Survivor/Systems/` 新建静态类 `XxxSystem.Run(BattleState state, ...)`。

@@ -41,3 +41,34 @@
 - 未执行的检查及原因: HybridCLR 解释执行下的真机耗时（未安装 HybridCLR 原生部分、未打包）。
 - 需要的人工动作: 决定战斗核心是否移出热更程序集（需真机数据）；数值平衡（默认难度下玩家约 90 秒阵亡）。
 - 后续: 联机阶段——协议（帧指令上行/广播）、服务端房间帧推进与哈希校验、客户端网络输入源。
+
+---
+
+# 单人战斗服务端校验（2026-11-02）
+
+- 状态: complete
+
+## 目标与验收
+
+- [x] 服务端下发种子开局；客户端每秒上传指令批次 + 检查点哈希；服务端增量重放核对；结算以服务端为准
+- [x] 共享 `BattleVerifier`，联机阶段复用
+- [x] 实机端到端：登录 → 主界面"进入战斗" → 战斗 → 服务端日志 `verified: frame=520 kills=23 died=True`
+- [x] 作弊拦截：改内存击杀数 → 5005（frame 100 检查点）；客户端跳帧加速 → 5004（frame 260 > allowed 154）；离线测试覆盖篡改指令、跳批次、超大批次
+
+## 范围与决策
+
+- 修改: `BattleMessage.proto` 新增 3 对请求并重新导出；`ErrorCode.cs` 新增 5001~5005；Gate 新增 SoloBattleComponent / System / 3 个 Handler；`MainPage` 不在房间时显示"进入战斗"并走单人战斗；沙盒渲染抽成 `SurvivorBattleView`。
+- 决策: 组件挂 Session（断线即作废）；BattleId 用 RuntimeId（组件 Id 与 Session 相同，无法区分前后两局）；检查点哈希 0 表示该批不校验（积压拆批时），后续检查点和结算仍覆盖；战斗用独立透视相机 + 自发光材质（GameStart 场景无灯光）。
+
+## 实施与证据
+
+- `dotnet run -c Release --project GameServer/Tools/BattleCheck` → ALL PASSED（新增 verifier 项）
+- `dotnet build GameServer/Server/Server.sln` → 0 错误；Unity recompile → 0 错误
+- 实机 4 局：2 局正常校验通过，1 局改内存被拒（5005），1 局加速被拒（5004）
+
+## 剩余风险
+
+- 导出工具 2025.2.1414 与 `define-common.md` 冲突：文档写 `bytes`→`byte[]`，工具不认，需用 `repeatedArray byte`。
+- 上游 `PlayerFuncOpenComponentSystem.cs:148` 用 `FromUnixTimeSeconds(TimeHelper.Now)`，但实测 `TimeHelper.Now` 是毫秒，疑似上游 bug，未改。
+- 新增错误码没有客户端文本配置，提示里直接显示错误码。
+- 编辑器里 `Time.timeScale` 被 DGame 接管，无法用它模拟加速；加速测试改为直接推进驱动。

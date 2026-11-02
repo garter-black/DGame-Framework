@@ -23,16 +23,22 @@ namespace Fantasy
         public const uint S2C_NotifyEnterBattle = 134227733;
         public const uint CSChapterInfo = 134227734;
         public const uint S2C_BroadcastFrameData = 134227735;
-        public const uint C2G_QueryFuncOpenListRequest = 268445462;
-        public const uint G2C_QueryFuncOpenListResponse = 402663190;
+        public const uint C2G_SoloBattleStartRequest = 268445462;
+        public const uint G2C_SoloBattleStartResponse = 402663190;
+        public const uint C2G_SoloBattleInputsRequest = 268445463;
+        public const uint G2C_SoloBattleInputsResponse = 402663191;
+        public const uint C2G_SoloBattleEndRequest = 268445464;
+        public const uint G2C_SoloBattleEndResponse = 402663192;
+        public const uint C2G_QueryFuncOpenListRequest = 268445465;
+        public const uint G2C_QueryFuncOpenListResponse = 402663193;
         public const uint G2C_FuncOpenNotify = 134227736;
-        public const uint C2A_RegisterRequest = 268445463;
-        public const uint A2C_RegisterResponse = 402663191;
-        public const uint C2A_LoginRequest = 268445464;
-        public const uint A2C_LoginResponse = 402663192;
+        public const uint C2A_RegisterRequest = 268445466;
+        public const uint A2C_RegisterResponse = 402663194;
+        public const uint C2A_LoginRequest = 268445467;
+        public const uint A2C_LoginResponse = 402663195;
         public const uint C2A_RecordRecentServer = 134227737;
-        public const uint C2G_LoginRequest = 268445465;
-        public const uint G2C_LoginResponse = 402663193;
+        public const uint C2G_LoginRequest = 268445468;
+        public const uint G2C_LoginResponse = 402663196;
         public const uint G2C_RepeatLogin = 134227738;
     }
 }

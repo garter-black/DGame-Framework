@@ -35,6 +35,13 @@ namespace GameLogic
 
 		private partial void OnClickStartBtn()
 		{
+			// 不在房间：单人战斗（服务端校验）；在房间：联机开战（待接入）。
+			if (!RoomDataMgr.Instance.HasRoom)
+			{
+				SoloBattleMgr.Instance.StartAsync().Coroutine();
+				return;
+			}
+
 			if (!IsRoomOwner())
 			{
 				GameModule.UIModule.ShowTipsUI(G.R("只有房主可以开始战斗"));
@@ -118,7 +125,7 @@ namespace GameLogic
 				m_textRoomId.text = "房间号：暂无";
 				m_textPlayer1.text = "暂无房主";
 				m_textPlayer2.text = "暂无队员";
-				m_btnStart.SetActive(false);
+				m_btnStart.SetActive(true);
 				return;
 			}
 

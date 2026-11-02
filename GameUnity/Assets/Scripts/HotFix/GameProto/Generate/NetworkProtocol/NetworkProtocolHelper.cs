@@ -173,6 +173,46 @@ namespace Fantasy
 			session.Send(S2C_BroadcastFrameData_message);
 		}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static async FTask<G2C_SoloBattleStartResponse> C2G_SoloBattleStartRequest(this Session session, C2G_SoloBattleStartRequest C2G_SoloBattleStartRequest_request)
+		{
+			return (G2C_SoloBattleStartResponse)await session.Call(C2G_SoloBattleStartRequest_request);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static async FTask<G2C_SoloBattleStartResponse> C2G_SoloBattleStartRequest(this Session session)
+		{
+			using var C2G_SoloBattleStartRequest_request = Fantasy.C2G_SoloBattleStartRequest.Create();
+			return (G2C_SoloBattleStartResponse)await session.Call(C2G_SoloBattleStartRequest_request);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static async FTask<G2C_SoloBattleInputsResponse> C2G_SoloBattleInputsRequest(this Session session, C2G_SoloBattleInputsRequest C2G_SoloBattleInputsRequest_request)
+		{
+			return (G2C_SoloBattleInputsResponse)await session.Call(C2G_SoloBattleInputsRequest_request);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static async FTask<G2C_SoloBattleInputsResponse> C2G_SoloBattleInputsRequest(this Session session, long battleId, int startFrame, byte[] inputs, ulong checkpointHash)
+		{
+			using var C2G_SoloBattleInputsRequest_request = Fantasy.C2G_SoloBattleInputsRequest.Create();
+			C2G_SoloBattleInputsRequest_request.BattleId = battleId;
+			C2G_SoloBattleInputsRequest_request.StartFrame = startFrame;
+			C2G_SoloBattleInputsRequest_request.Inputs = inputs;
+			C2G_SoloBattleInputsRequest_request.CheckpointHash = checkpointHash;
+			return (G2C_SoloBattleInputsResponse)await session.Call(C2G_SoloBattleInputsRequest_request);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static async FTask<G2C_SoloBattleEndResponse> C2G_SoloBattleEndRequest(this Session session, C2G_SoloBattleEndRequest C2G_SoloBattleEndRequest_request)
+		{
+			return (G2C_SoloBattleEndResponse)await session.Call(C2G_SoloBattleEndRequest_request);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static async FTask<G2C_SoloBattleEndResponse> C2G_SoloBattleEndRequest(this Session session, long battleId, int finalFrame, ulong finalHash)
+		{
+			using var C2G_SoloBattleEndRequest_request = Fantasy.C2G_SoloBattleEndRequest.Create();
+			C2G_SoloBattleEndRequest_request.BattleId = battleId;
+			C2G_SoloBattleEndRequest_request.FinalFrame = finalFrame;
+			C2G_SoloBattleEndRequest_request.FinalHash = finalHash;
+			return (G2C_SoloBattleEndResponse)await session.Call(C2G_SoloBattleEndRequest_request);
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static async FTask<G2C_QueryFuncOpenListResponse> C2G_QueryFuncOpenListRequest(this Session session, C2G_QueryFuncOpenListRequest C2G_QueryFuncOpenListRequest_request)
 		{
 			return (G2C_QueryFuncOpenListResponse)await session.Call(C2G_QueryFuncOpenListRequest_request);
