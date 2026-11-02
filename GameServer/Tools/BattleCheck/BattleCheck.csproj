@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- 战斗核心的确定性检查和压测。只编译 FixedPoint 数学库和 Survivor 目录，证明战斗核心不依赖 Unity/Fantasy。
+       运行方法见同目录 README.md -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UnityAssetsDir>..\..\..\GameUnity\Assets\</UnityAssetsDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(UnityAssetsDir)DGame\FixedPoint\Math\**\*.cs" Link="Shared\FixedPoint\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="$(UnityAssetsDir)Scripts\HotFix\GameBattle\Survivor\**\*.cs" Link="Shared\Survivor\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+</Project>
