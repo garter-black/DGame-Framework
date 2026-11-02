@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:GameUnity/Assets/DGame/FixedPoint.meta
 guid: 6d97f3dc7fae793499cc31f556ef7fda
-========
-guid: aa4cd4d4130f2394d83bec3882bdca11
->>>>>>>> main:GameUnity/Assets/Scripts/HotFix/GameBattle/Log.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
