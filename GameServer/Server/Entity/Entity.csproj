@@ -16,4 +16,16 @@
     <PackageReference Include="ToolGood.Words" Version="3.1.0.3" />
   </ItemGroup>
 
+  <!-- 前后端共享的确定性战斗逻辑：源码在 Unity 工程里，服务端直接引用同一份文件编译 -->
+  <PropertyGroup>
+    <UnityAssetsDir>..\..\..\GameUnity\Assets\</UnityAssetsDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(UnityAssetsDir)DGame\FixedPoint\**\*.cs"
+             Exclude="$(UnityAssetsDir)DGame\FixedPoint\Physics\Samples\**;$(UnityAssetsDir)DGame\FixedPoint\**\*.Unity.cs"
+             Link="Shared\FixedPoint\%(RecursiveDir)%(Filename)%(Extension)" />
+    <Compile Include="$(UnityAssetsDir)Scripts\HotFix\GameBattle\**\*.cs"
+             Link="Shared\GameBattle\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
 </Project>
