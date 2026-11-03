@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 货币配置表
+/// </summary>
 public sealed partial class CurrencyConfig : Luban.BeanBase
 {
     public CurrencyConfig() { }

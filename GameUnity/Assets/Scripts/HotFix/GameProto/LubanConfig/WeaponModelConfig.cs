@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 武器模型配置表
+/// </summary>
 public sealed partial class WeaponModelConfig : Luban.BeanBase
 {
     public WeaponModelConfig() { }

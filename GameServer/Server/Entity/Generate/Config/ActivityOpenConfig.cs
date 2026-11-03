@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 活动开启配置表
+/// </summary>
 public sealed partial class ActivityOpenConfig : Luban.BeanBase
 {
     public ActivityOpenConfig() { }

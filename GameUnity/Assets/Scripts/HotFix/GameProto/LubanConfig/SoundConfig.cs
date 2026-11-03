@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 音效配置表
+/// </summary>
 public sealed partial class SoundConfig : Luban.BeanBase
 {
     public SoundConfig() { }

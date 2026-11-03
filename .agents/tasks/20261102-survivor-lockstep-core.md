@@ -110,7 +110,7 @@
 
 # 配置表转表工具链（2026-11-03）
 
-- 状态: validating（正式导表等待用户 approve）
+- 状态: complete
 
 ## 证据
 
@@ -122,3 +122,5 @@
 ## 剩余
 
 - `approve` 需用户本人执行（agent 代填被安全检查拒绝），之后 `luban apply`；服务端正式导表同样需用户确认。
+- 正式导表：用户在会话中回复"同意"后，直接运行作者工具 `gen_bin_all_lazyload.bat`（客户端 + 服务端），未生成 approve 记录。结果：二进制 0 变化；客户端/服务端各 20 个生成代码只新增表注释；新增 `GameUnity/Configs/Json`（20 个，build-pipeline.md 要求提交用于审查）。Unity recompile 0 错误，服务端 0 错误。
+- `LubanConfig/test` 空目录：导表清理后 Unity 按 test.meta 重建，状态与仓库一致，未处理。

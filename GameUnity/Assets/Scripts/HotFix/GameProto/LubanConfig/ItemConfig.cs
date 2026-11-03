@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 道具配置表
+/// </summary>
 public sealed partial class ItemConfig : Luban.BeanBase
 {
     public ItemConfig() { }

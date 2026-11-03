@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 功能参数配置表
+/// </summary>
 public sealed partial class FuncParamConfig : Luban.BeanBase
 {
     public FuncParamConfig() { }

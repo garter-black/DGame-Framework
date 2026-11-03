@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 获取途径配置表
+/// </summary>
 public sealed partial class GetWayConfig : Luban.BeanBase
 {
     public GetWayConfig() { }

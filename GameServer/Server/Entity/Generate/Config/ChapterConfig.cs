@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 章节配置表
+/// </summary>
 public sealed partial class ChapterConfig : Luban.BeanBase
 {
     public ChapterConfig() { }

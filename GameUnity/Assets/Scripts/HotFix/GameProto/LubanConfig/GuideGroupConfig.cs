@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 新手引导组配置表
+/// </summary>
 public sealed partial class GuideGroupConfig : Luban.BeanBase
 {
     public GuideGroupConfig() { }

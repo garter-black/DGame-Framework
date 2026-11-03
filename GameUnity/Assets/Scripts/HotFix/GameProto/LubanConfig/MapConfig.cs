@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 地图配置表
+/// </summary>
 public sealed partial class MapConfig : Luban.BeanBase
 {
     public MapConfig() { }

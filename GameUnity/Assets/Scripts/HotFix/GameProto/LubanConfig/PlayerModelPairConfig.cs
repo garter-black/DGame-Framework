@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 角色模型配对表
+/// </summary>
 public sealed partial class PlayerModelPairConfig : Luban.BeanBase
 {
     public PlayerModelPairConfig() { }

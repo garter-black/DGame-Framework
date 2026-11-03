@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 音效随机配置表
+/// </summary>
 public sealed partial class SoundRandomConfig : Luban.BeanBase
 {
     public SoundRandomConfig() { }

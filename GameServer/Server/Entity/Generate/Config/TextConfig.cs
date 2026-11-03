@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 文本配置表
+/// </summary>
 public sealed partial class TextConfig : Luban.BeanBase
 {
     public TextConfig() { }

@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 模型配置表
+/// </summary>
 public sealed partial class ModelConfig : Luban.BeanBase
 {
     public ModelConfig() { }

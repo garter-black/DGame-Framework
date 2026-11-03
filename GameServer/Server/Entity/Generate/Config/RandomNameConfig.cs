@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 随机名配置表
+/// </summary>
 public sealed partial class RandomNameConfig : Luban.BeanBase
 {
     public RandomNameConfig() { }

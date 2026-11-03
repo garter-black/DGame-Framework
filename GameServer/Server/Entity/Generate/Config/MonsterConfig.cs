@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 怪物配置表
+/// </summary>
 public sealed partial class MonsterConfig : Luban.BeanBase
 {
     public MonsterConfig() { }

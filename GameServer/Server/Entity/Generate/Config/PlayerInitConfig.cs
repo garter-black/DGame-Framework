@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 角色初始配置表
+/// </summary>
 public sealed partial class PlayerInitConfig : Luban.BeanBase
 {
     public PlayerInitConfig() { }

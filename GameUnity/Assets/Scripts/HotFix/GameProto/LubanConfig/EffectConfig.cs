@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 特效配置表
+/// </summary>
 public sealed partial class EffectConfig : Luban.BeanBase
 {
     public EffectConfig() { }

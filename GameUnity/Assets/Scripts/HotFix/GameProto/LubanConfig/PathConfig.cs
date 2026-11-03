@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 路径点配置表
+/// </summary>
 public sealed partial class PathConfig : Luban.BeanBase
 {
     public PathConfig() { }

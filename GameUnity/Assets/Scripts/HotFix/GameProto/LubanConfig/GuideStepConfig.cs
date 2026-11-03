@@ -12,6 +12,9 @@ using Luban;
 
 namespace GameProto
 {
+/// <summary>
+/// 新手引导步骤配置表
+/// </summary>
 public sealed partial class GuideStepConfig : Luban.BeanBase
 {
     public GuideStepConfig() { }
