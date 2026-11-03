@@ -83,10 +83,12 @@ Survivor 目录里禁止：
 | .NET 8（服务端） | 0.47ms | 1.08ms | 1.76ms |
 | Unity 编辑器 Mono，Release 编译 | — | 4.36ms | — |
 | Unity 编辑器 Mono，Debug 编译（默认） | — | 15.3ms | — |
-| **Windows 包，IL2CPP + HybridCLR 解释执行（当前）** | **6.26ms** | **15.2ms** | **25.6ms** |
+| Windows 包，IL2CPP + HybridCLR 解释执行 | 6.26ms | 15.2ms | 25.6ms |
+| **Windows 包，IL2CPP AOT（关闭 HybridCLR）** | **0.88ms** | **2.06ms** | **3.45ms** |
 
-- 三个数量下 IL2CPP 包的哈希与 .NET 完全一致（`5D8917DC…` / `D16ABD42…` / `CE558ED6…`），客户端真机运行和服务端校验结果相同。
-- 解释执行比 .NET 慢约 14 倍。2000 怪时每秒逻辑占用约 300ms（单核 30%），这还是桌面高端 CPU；中端手机通常慢 3~5 倍，单帧会超过 50ms 预算。
+- 解释执行与 AOT 两种包、三个数量下的哈希都与 .NET 完全一致（`5D8917DC…` / `D16ABD42…` / `CE558ED6…`），客户端真机运行和服务端校验结果相同。
+- AOT 比解释执行快约 7.4 倍，比 .NET 慢约 1.9 倍。解释执行比 .NET 慢约 14 倍。2000 怪时每秒逻辑占用约 300ms（单核 30%），这还是桌面高端 CPU；中端手机通常慢 3~5 倍，单帧会超过 50ms 预算。
+- 关闭 HybridCLR：菜单 DGame Tools/HybridCLR/禁用HybridCLR（只去掉当前平台的 ENABLE_HYBRIDCLR 宏），然后直接 AutoBuildWindow，无需 Generate All；运行时跳过热更 DLL 加载，直接使用包内程序集。
 - 复测：打包后运行 `Release_Windows.exe -battleBench`，结果写入 `%USERPROFILE%/AppData/LocalLow/DefaultCompany/GameUnity/battle_bench.txt`。
 
 ## 从上游同步时的坑
