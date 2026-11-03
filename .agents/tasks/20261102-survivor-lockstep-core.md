@@ -103,5 +103,5 @@
 
 - 菜单"禁用HybridCLR"后直接 AutoBuildWindow 成功；正常启动进入 GameStart、Fantasy 初始化，无异常。
 - 压测：1000/2000/3000 怪 0.88/2.06/3.45ms（解释执行 6.26/15.2/25.6ms，约快 7.4 倍），哈希与 .NET 一致。
-- 菜单只移除当前平台（Standalone）的 ENABLE_HYBRIDCLR，Android/iOS 等平台宏仍在。
-- HybridCLR 开关状态待用户决定，设置改动未提交。
+- 菜单会移除所有平台的 ENABLE_HYBRIDCLR（Unity 写盘后确认）。
+- 用户决定保持关闭 HybridCLR，已提交。

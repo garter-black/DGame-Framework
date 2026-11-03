@@ -857,7 +857,7 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: DOTWEEN;ENABLE_HYBRIDCLR;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;TextMeshPro;ENABLE_DGAME_LOG
+    Android: DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;TextMeshPro;ENABLE_DGAME_LOG
     EmbeddedLinux: DOTWEEN;TextMeshPro
     GameCoreScarlett: DOTWEEN
     GameCoreXboxOne: DOTWEEN;TextMeshPro
@@ -870,12 +870,12 @@ PlayerSettings:
     PS5: DOTWEEN;TextMeshPro
     QNX: DOTWEEN
     Stadia: DOTWEEN;TextMeshPro
-    Standalone: DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ENABLE_HYBRIDCLR;TextMeshPro;ENABLE_DGAME_LOG
+    Standalone: DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;TextMeshPro;ENABLE_DGAME_LOG
     VisionOS: DOTWEEN
-    WebGL: DOTWEEN;ENABLE_HYBRIDCLR;TextMeshPro;ENABLE_DGAME_LOG
-    Windows Store Apps: DOTWEEN;ENABLE_HYBRIDCLR;TextMeshPro;ENABLE_DGAME_LOG
+    WebGL: DOTWEEN;TextMeshPro;ENABLE_DGAME_LOG
+    Windows Store Apps: DOTWEEN;TextMeshPro;ENABLE_DGAME_LOG
     XboxOne: DOTWEEN;TextMeshPro
-    iPhone: DOTWEEN;ENABLE_HYBRIDCLR;TextMeshPro;ENABLE_DGAME_LOG
+    iPhone: DOTWEEN;TextMeshPro;ENABLE_DGAME_LOG
     tvOS: DOTWEEN;TextMeshPro
   additionalCompilerArguments: {}
   platformArchitecture: {}

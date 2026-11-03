@@ -88,7 +88,7 @@ Survivor 目录里禁止：
 
 - 解释执行与 AOT 两种包、三个数量下的哈希都与 .NET 完全一致（`5D8917DC…` / `D16ABD42…` / `CE558ED6…`），客户端真机运行和服务端校验结果相同。
 - AOT 比解释执行快约 7.4 倍，比 .NET 慢约 1.9 倍。解释执行比 .NET 慢约 14 倍。2000 怪时每秒逻辑占用约 300ms（单核 30%），这还是桌面高端 CPU；中端手机通常慢 3~5 倍，单帧会超过 50ms 预算。
-- 关闭 HybridCLR：菜单 DGame Tools/HybridCLR/禁用HybridCLR（只去掉当前平台的 ENABLE_HYBRIDCLR 宏），然后直接 AutoBuildWindow，无需 Generate All；运行时跳过热更 DLL 加载，直接使用包内程序集。
+- 关闭 HybridCLR：菜单 DGame Tools/HybridCLR/禁用HybridCLR（关闭 HybridCLR 并去掉所有平台的 ENABLE_HYBRIDCLR 宏），然后直接 AutoBuildWindow，无需 Generate All；运行时跳过热更 DLL 加载，直接使用包内程序集。
 - 复测：打包后运行 `Release_Windows.exe -battleBench`，结果写入 `%USERPROFILE%/AppData/LocalLow/DefaultCompany/GameUnity/battle_bench.txt`。
 
 ## 从上游同步时的坑
@@ -100,5 +100,5 @@ Survivor 目录里禁止：
 - `DGame_Fantasy` 曾提交过带冲突标记（`<<<<<<<<`）的 `.meta` 文件，合并后用 `git grep -l '^<<<<<<<' -- GameUnity` 检查。
 - `.agents/scripts/workflow.py` 在中文 Windows 上要加 `PYTHONUTF8=1`，否则报 GBK 解码错误。
 - 服务端依赖本机 MongoDB（`127.0.0.1:27017`）。
-- 上游默认关闭 HybridCLR（`HybridCLRSettings.enable: 0`）、Obfuz 构建期混淆开启但运行时宏 `ENABLE_OBFUZ` 未定义，且在 Unity 6.3 下混淆会空引用崩溃。本仓库已开启 HybridCLR（菜单 DGame Tools/HybridCLR/启用HybridCLR）、关闭 Obfuz 构建期混淆（Project Settings → Obfuz → Build Pipeline Settings）。同步上游后检查这两项。
-- 打包流程：HybridCLR/Generate/All → DGame Tools/Build/AutoBuildWindow，产物在 `GameUnity/Build/Windows/`。
+- 上游默认关闭 HybridCLR（`HybridCLRSettings.enable: 0`）、Obfuz 构建期混淆开启但运行时宏 `ENABLE_OBFUZ` 未定义，且在 Unity 6.3 下混淆会空引用崩溃。本仓库已关闭 HybridCLR（不做代码热更，战斗走 AOT 原生速度；资源和配置表仍可经 YooAsset 热更；需要时用菜单 DGame Tools/HybridCLR/启用HybridCLR 打开）、关闭 Obfuz 构建期混淆（Project Settings → Obfuz → Build Pipeline Settings）。同步上游后检查这两项。
+- 打包流程：DGame Tools/Build/AutoBuildWindow（若开启 HybridCLR，先执行 HybridCLR/Generate/All），产物在 `GameUnity/Build/Windows/`。
