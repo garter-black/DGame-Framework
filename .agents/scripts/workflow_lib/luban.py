@@ -8,6 +8,16 @@ import re
 from .core import WorkflowError, blocked, file_hash, require_success
 
 
+def batch_env():
+    """Environment for running the export .bat scripts.
+
+    Agent shells (e.g. Claude Code) set NoDefaultCurrentDirectoryInExePath, which stops cmd from
+    finding the .bat in its cwd and the nested `call path_define.bat`. Windows env keys are
+    case-insensitive (os.environ upper-cases them), so drop it case-insensitively.
+    """
+    return {k: v for k, v in os.environ.items() if k.upper() != "NODEFAULTCURRENTDIRECTORYINEXEPATH"}
+
+
 def _paths(context, mode="lazyload"):
     if mode not in ("standard", "lazyload"):
         raise WorkflowError(f"Unsupported DGame Luban export mode: {mode}")
@@ -115,7 +125,7 @@ def isolated_export(run, modes=("standard", "lazyload"), repeats=2):
                 args = ["cmd.exe", "/d", "/c", isolated_script.name]
             else:
                 args = ["bash", isolated_script.name]
-            env = {**os.environ, "AI_MODE": "1", "AUTO_CONTINUE": "1", "LUBAN_DLL": str(isolated_dll)}
+            env = {**batch_env(), "AI_MODE": "1", "AUTO_CONTINUE": "1", "LUBAN_DLL": str(isolated_dll)}
             require_success(run.execute(args, cwd=isolated_script.parent, timeout=600, env=env),
                             f"Isolated DGame Luban {mode} export {index}")
             manifests.append(_manifest(root, root / "GameConfig"))

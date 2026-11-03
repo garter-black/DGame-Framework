@@ -102,7 +102,7 @@ def luban_apply(run, plan, approval_file):
         blocked("Luban preview has no validated output manifest; generate a fresh preview.")
     luban.validate_manifest(expected, preview_manifest)
     consume_approval(run, plan, approval_file)
-    env = {**os.environ, "AI_MODE": "1", "AUTO_CONTINUE": "1", "LUBAN_DLL": str(dll)}
+    env = {**luban.batch_env(), "AI_MODE": "1", "AUTO_CONTINUE": "1", "LUBAN_DLL": str(dll)}
     args = ["cmd.exe", "/d", "/c", script.name] if os.name == "nt" else ["bash", script.name]
     require_success(run.execute(args, cwd=script.parent, timeout=600, env=env, mutating=True), "DGame Luban export")
     actual = luban._manifest(run.context.repo, run.context.repo / "GameConfig")

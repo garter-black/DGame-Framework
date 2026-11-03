@@ -91,6 +91,18 @@ Survivor 目录里禁止：
 - 关闭 HybridCLR：菜单 DGame Tools/HybridCLR/禁用HybridCLR（关闭 HybridCLR 并去掉所有平台的 ENABLE_HYBRIDCLR 宏），然后直接 AutoBuildWindow，无需 Generate All；运行时跳过热更 DLL 加载，直接使用包内程序集。
 - 复测：打包后运行 `Release_Windows.exe -battleBench`，结果写入 `%USERPROFILE%/AppData/LocalLow/DefaultCompany/GameUnity/battle_bench.txt`。
 
+## 配置表转表（Luban）
+
+新机器首次准备（这两样被 `.gitignore` 忽略，不在仓库里）：
+
+1. 从 https://github.com/focus-creative-games/luban/releases 下载 `Luban.7z`（已验证 v5.1.0），解压后把 `Luban/` 目录放到 `GameConfig/Tools/LubanTools/Luban/`（里面应有 `Luban.dll`）。
+2. 复制 `GameConfig/GenerateTool_Binary/path_define_tmp.bat` 为同目录的 `path_define.bat`（`.sh` 同理）。
+
+日常转表：双击 `GameConfig/一键转表工具_Bin.bat`（客户端 + 服务端），或分别用 `客户端转表工具_Bin.bat` / `服务器转表工具_Bin.bat`。
+AI 走仓库 Workflow：`luban validate`（隔离校验）→ `luban preview` → 由人执行 `approve` → `luban apply`。
+
+v5.1.0 与仓库现有产物对比（2026-11-03）：客户端、服务端二进制配置逐字节一致；生成代码只多了表注释（`/// <summary>`），无逻辑差异。
+
 ## 从上游同步时的坑
 
 作者仓库：`upstream` = https://github.com/AmaniDawn/DGame ，同步 `DGame_Fantasy` 和 `DGame_Unity6+` 两个分支。

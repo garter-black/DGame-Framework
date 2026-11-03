@@ -105,3 +105,20 @@
 - 压测：1000/2000/3000 怪 0.88/2.06/3.45ms（解释执行 6.26/15.2/25.6ms，约快 7.4 倍），哈希与 .NET 一致。
 - 菜单会移除所有平台的 ENABLE_HYBRIDCLR（Unity 写盘后确认）。
 - 用户决定保持关闭 HybridCLR，已提交。
+
+---
+
+# 配置表转表工具链（2026-11-03）
+
+- 状态: validating（正式导表等待用户 approve）
+
+## 证据
+
+- 缺失原因：`GameConfig/Tools/LubanTools/` 与 `path_define.bat` 被 .gitignore 忽略。按 `GameConfig/Tools/Luban工具缺失自动修复指南.md` 下载 Luban v5.1.0（Luban.7z，1,647,739 字节，预编译 net8.0），安装并由模板生成 path_define。
+- Workflow 在 agent 环境失败：Claude Code 设置 `NoDefaultCurrentDirectoryInExePath=1`，cmd 找不到 `.bat` 及嵌套 `call path_define.bat`；Windows 下 os.environ 键为大写。修复：`luban.batch_env()` 大小写不敏感去掉该变量，隔离导表与正式导表两处调用。
+- `workflow.py luban validate` → passed；`luban preview --mode lazyload` → passed（`.agents/runs/20261103T074218Z-59dc9767/preview.json`）。
+- 隔离产物对比：客户端 Binary 20/20 逐字节一致；LubanConfig 73 个文件中 21 个仅多表注释；仓库中空的 `LubanConfig/test` 目录（仅 .meta）会被清理。服务端（手动隔离运行 gen_bin_server_lazyload）Binary 20/20 一致，代码 62 个中 20 个仅多注释。
+
+## 剩余
+
+- `approve` 需用户本人执行（agent 代填被安全检查拒绝），之后 `luban apply`；服务端正式导表同样需用户确认。
