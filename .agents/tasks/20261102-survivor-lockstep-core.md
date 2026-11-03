@@ -72,3 +72,29 @@
 - 上游 `PlayerFuncOpenComponentSystem.cs:148` 用 `FromUnixTimeSeconds(TimeHelper.Now)`，但实测 `TimeHelper.Now` 是毫秒，疑似上游 bug，未改。
 - 新增错误码没有客户端文本配置，提示里直接显示错误码。
 - 编辑器里 `Time.timeScale` 被 DGame 接管，无法用它模拟加速；加速测试改为直接推进驱动。
+
+---
+
+# HybridCLR 安装与 Windows 包性能实测（2026-11-03）
+
+- 状态: complete
+
+## 目标与验收
+
+- [x] 安装 Unity 6000.3.10f1 Windows IL2CPP 模块（Hub CLI）、HybridCLR 原生部分（Installer v8.9.0）
+- [x] HybridCLR/Generate/All 成功（85 个裁剪 AOT DLL）；AutoBuildWindow 出包 `Build/Windows/Release_Windows.exe`
+- [x] 包内压测：1000/2000/3000 怪 6.26/15.2/25.6ms，哈希与 .NET 一致
+
+## 范围与决策
+
+- 授权: 用户"做 1 和 2，打 windows 就可以"、"你来装"。
+- 开启 HybridCLR（上游默认关闭，否则 Generate All 不复制裁剪 AOT DLL，报 no aot assembly found）。
+- 关闭 Obfuz 构建期混淆：上游构建期开启但运行时宏未定义，且 Unity 6.3 下 CallObfus 空引用崩溃；混淆也会干扰性能数据。正式启用需单独处理。
+- 压测入口 `BattleBench.TryRun()` 接在 `GameStart.StartGame` 开头：DataCenterSys 懒初始化，登录前不会执行数据中心模块的 OnInit。
+- 未转表：配置无改动，避免写生产目录。
+
+## 剩余风险
+
+- 未测 AOT（非热更）下的耗时；按 .NET 结果估计接近 1~2ms，需移动程序集后实测。
+- 未测手机。
+- Obfuz 目前关闭，发布前如需混淆要修复。

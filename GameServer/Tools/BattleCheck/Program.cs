@@ -283,7 +283,7 @@ string Benchmark()
 
         timings.Sort();
         Console.WriteLine($"  cap={cap,4} enemies={sim.State.Enemies.Count,4} kills={sim.State.TotalKills,5}  " +
-                          $"avg={timings.Average():F3}ms p99={timings[(int)(timings.Count * 0.99)]:F3}ms max={timings[^1]:F3}ms");
+                          $"avg={timings.Average():F3}ms p99={timings[(int)(timings.Count * 0.99)]:F3}ms max={timings[^1]:F3}ms hash={sim.ComputeHash():X16}");
     }
 
     return null;

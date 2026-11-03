@@ -74,16 +74,20 @@ Survivor 目录里禁止：
 - 沙盒：WASD 移动，F6 用当前录像重放并对比哈希，F5 把录像存到 `persistentDataPath/Replays/`（文件名带哈希）。
 - 跨运行时：`dotnet run -c Release --project GameServer/Tools/BattleCheck -- --replay <录像>`，验证 Unity 录的局在 .NET 下结果一致。
 
-## 性能数据（2026-11-02，本机桌面 CPU，4 玩家，单帧逻辑耗时，预算 50ms）
+## 性能数据（4 玩家，单帧逻辑耗时，逻辑 20 帧/秒即预算 50ms）
+
+测试机 AMD Ryzen 7 5800X3D（桌面高端 CPU）。场景与 `BattleCheck --bench-only` 相同。
 
 | 运行环境 | 1000 怪 | 2000 怪 | 3000 怪 |
 |---|---|---|---|
-| .NET 8（服务端同款） | 0.48ms | 1.17ms | 1.81ms |
+| .NET 8（服务端） | 0.47ms | 1.08ms | 1.76ms |
 | Unity 编辑器 Mono，Release 编译 | — | 4.36ms | — |
 | Unity 编辑器 Mono，Debug 编译（默认） | — | 15.3ms | — |
-| HybridCLR 解释执行（真机） | 未测 | 未测 | 未测 |
+| **Windows 包，IL2CPP + HybridCLR 解释执行（当前）** | **6.26ms** | **15.2ms** | **25.6ms** |
 
-GameBattle 在 HybridCLR 热更列表里，真机上会被解释执行，比上表都慢，移动端还要再乘设备差距。上线前必须在目标手机上实测，再决定战斗核心是否移出热更程序集。编辑器里调性能时把右下角代码优化切到 Release，否则数字偏大 3 倍以上。
+- 三个数量下 IL2CPP 包的哈希与 .NET 完全一致（`5D8917DC…` / `D16ABD42…` / `CE558ED6…`），客户端真机运行和服务端校验结果相同。
+- 解释执行比 .NET 慢约 14 倍。2000 怪时每秒逻辑占用约 300ms（单核 30%），这还是桌面高端 CPU；中端手机通常慢 3~5 倍，单帧会超过 50ms 预算。
+- 复测：打包后运行 `Release_Windows.exe -battleBench`，结果写入 `%USERPROFILE%/AppData/LocalLow/DefaultCompany/GameUnity/battle_bench.txt`。
 
 ## 从上游同步时的坑
 
@@ -94,3 +98,5 @@ GameBattle 在 HybridCLR 热更列表里，真机上会被解释执行，比上�
 - `DGame_Fantasy` 曾提交过带冲突标记（`<<<<<<<<`）的 `.meta` 文件，合并后用 `git grep -l '^<<<<<<<' -- GameUnity` 检查。
 - `.agents/scripts/workflow.py` 在中文 Windows 上要加 `PYTHONUTF8=1`，否则报 GBK 解码错误。
 - 服务端依赖本机 MongoDB（`127.0.0.1:27017`）。
+- 上游默认关闭 HybridCLR（`HybridCLRSettings.enable: 0`）、Obfuz 构建期混淆开启但运行时宏 `ENABLE_OBFUZ` 未定义，且在 Unity 6.3 下混淆会空引用崩溃。本仓库已开启 HybridCLR（菜单 DGame Tools/HybridCLR/启用HybridCLR）、关闭 Obfuz 构建期混淆（Project Settings → Obfuz → Build Pipeline Settings）。同步上游后检查这两项。
+- 打包流程：HybridCLR/Generate/All → DGame Tools/Build/AutoBuildWindow，产物在 `GameUnity/Build/Windows/`。

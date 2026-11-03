@@ -96,6 +96,11 @@ public partial class GameStart
 
     private static void StartGame()
     {
+        if (BattleBench.TryRun())
+        {
+            return;
+        }
+
         Init().Forget();
 
         async UniTaskVoid Init()
