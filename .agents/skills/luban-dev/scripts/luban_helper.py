@@ -2791,7 +2791,9 @@ class LubanConfigHelper:
                 text=True,
                 encoding="utf-8",
                 errors="replace",
-                env={**os.environ, "AI_MODE": "1", "AUTO_CONTINUE": "1"}
+                # Agent shells set NoDefaultCurrentDirectoryInExePath, which breaks the nested `call path_define.bat`.
+                env={**{k: v for k, v in os.environ.items() if k.upper() != "NODEFAULTCURRENTDIRECTORYINEXEPATH"},
+                     "AI_MODE": "1", "AUTO_CONTINUE": "1"}
             )
 
             if result.stdout:

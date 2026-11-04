@@ -28,7 +28,7 @@ GameUnity/Assets/Scripts/HotFix/GameLogic/ConfigMgr/  # 业务配置管理器
 ## luban.conf
 
 - `groups`：`c`、`s`、`e`，当前均为默认组。
-- `schemaFiles`：`Defines`、`Datas/__tables__.xlsx`、`Datas/__beans__.xlsx`、`Datas/__enums__.xlsx`。
+- `schemaFiles`：`Defines`、`Datas/Defines/__tables__.xlsx`、`Datas/Defines/__beans__.xlsx`、`Datas/Defines/__enums__.xlsx`。
 - `dataDir`：`Datas`。
 - `targets`：`server`、`client`、`all`。
 - 客户端 target：`manager=Tables`、`groups=["c"]`、`topModule=GameProto`。

@@ -4,20 +4,20 @@
 
 `luban.conf` 是 Luban 的主配置文件，使用 JSON 格式，定义项目结构、代码生成目标和数据导出配置。
 
-## 完整配置示例
+## 完整配置示例（即 DGame 当前 `GameConfig/luban.conf`）
 
 ```json
 {
     "groups": [
         {"names": ["c"], "default": true},
         {"names": ["s"], "default": true},
-        {"names": ["e"], "default": false}
+        {"names": ["e"], "default": true}
     ],
     "schemaFiles": [
         {"fileName": "Defines", "type": ""},
-        {"fileName": "Datas/__tables__.xlsx", "type": "table"},
-        {"fileName": "Datas/__beans__.xlsx", "type": "bean"},
-        {"fileName": "Datas/__enums__.xlsx", "type": "enum"}
+        {"fileName": "Datas/Defines/__tables__.xlsx", "type": "table"},
+        {"fileName": "Datas/Defines/__beans__.xlsx", "type": "bean"},
+        {"fileName": "Datas/Defines/__enums__.xlsx", "type": "enum"}
     ],
     "dataDir": "Datas",
     "targets": [
@@ -34,9 +34,9 @@
             "topModule": "GameProto"
         },
         {
-            "name": "editor",
+            "name": "all",
             "manager": "Tables",
-            "groups": ["c", "s", "e"],
+            "groups": ["c,s,e"],
             "topModule": "GameProto"
         }
     ]
@@ -60,9 +60,9 @@ Schema 定义文件列表。
 ```json
 "schemaFiles": [
     {"fileName": "Defines", "type": ""},
-    {"fileName": "Datas/__tables__.xlsx", "type": "table"},
-    {"fileName": "Datas/__beans__.xlsx", "type": "bean"},
-    {"fileName": "Datas/__enums__.xlsx", "type": "enum"}
+    {"fileName": "Datas/Defines/__tables__.xlsx", "type": "table"},
+    {"fileName": "Datas/Defines/__beans__.xlsx", "type": "bean"},
+    {"fileName": "Datas/Defines/__enums__.xlsx", "type": "enum"}
 ]
 ```
 
@@ -90,7 +90,7 @@ Schema 定义文件列表。
 "groups": [
     {"names": ["c"], "default": true},
     {"names": ["s"], "default": true},
-    {"names": ["e"], "default": false}
+    {"names": ["e"], "default": true}
 ]
 ```
 
@@ -186,14 +186,9 @@ GameConfig/
 ├── Defines/                # XML Schema 定义
 │   └── builtin.xml         # DGame 扩展类型映射
 ├── Datas/                  # 数据文件
-│   ├── __tables__.xlsx     # Excel 表定义
-│   ├── __beans__.xlsx      # Excel 结构定义
-│   ├── __enums__.xlsx      # Excel 枚举定义
-│   ├── 道具配置表.xlsx
-│   ├── 文本配置表.xlsx
-│   ├── 模型配置表.xlsx
-│   ├── 音效配置表.xlsx
-│   └── 特效配置表.xlsx
+│   ├── Defines/            # __tables__ / __beans__ / __enums__.xlsx
+│   ├── 道具/ 模型/ 关卡/ 运营/ 通用/   # 业务表按目录分组，如 通用/文本配置表.xlsx
+│   └── 音效配置表.xlsx
 └── GenerateTool_Binary/    # DGame 导表脚本
 ```
 

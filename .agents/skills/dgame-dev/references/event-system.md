@@ -11,7 +11,6 @@
 | `GameEvent.RemoveEventListener` | 移除普通事件监听；另有 `RemoveEventListener(int, Delegate)` 重载 |
 | `GameEvent.Send` | 通过字符串事件发送 |
 | `GameEvent.Get<T>()` | 获取接口事件代理 |
-| `GameEventHelper.AddEvent/RemoveEvent` | Source Generator 生成的监听/移除包装，内部调用 `GameEvent.AddEventListener/RemoveEventListener` |
 | `UIBase.AddUIEvent` | UI 内事件监听，自动清理 |
 | `GameEventDriver` | 记录 UI 事件，释放时统一移除 |
 

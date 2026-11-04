@@ -88,6 +88,8 @@ Player 使用明确工作目录，macOS 使用 `.app` 路径：
 
 ## MCP 接入
 
+Claude Code 已由仓库根 `.mcp.json` 配置 `unity-cli-mcp` 服务，无需再写配置。工具列表在会话启动时拉取：先打开 Unity Editor 再启动会话，否则需在 `/mcp` 里重连。用户级安装的其他 Unity MCP 服务（服务名不是 `unity-cli-mcp` 的）不是本项目入口，不用于本工程的查询、写入或验证。
+
 用户要求接入 Codex 时，使用 CLI 的 `mcp` stdio 服务连接 Pipeline。先通过 `codex mcp list --json` 发现实际服务名，选择执行 `unity mcp` 的条目，再用 `codex mcp get <实际服务名> --json` 核对 CLI 路径、版本及参数；只保留非敏感字段。已有通用服务或项目服务可连接当前 DGame 时复用，不因名称不是 `unity-dgame` 或未指定工程参数而重复创建。
 
 需要新增项目服务且用户已授权配置写入时，使用以下示例；服务名按现有配置选择，CLI 与工程使用绝对路径：

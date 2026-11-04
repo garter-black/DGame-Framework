@@ -73,7 +73,7 @@ DGame 的构建统一收口在 `DGame.ReleaseTools`（`GameUnity/Assets/DGame/Ed
 | 变量 | 含义 | 示例 |
 |------|------|------|
 | `WORKSPACE` | Unity 工程目录 | `E:\UnityProject\DGame\GameUnity` |
-| `UNITYEDITOR_PATH` | Unity 编辑器目录 | `E:\Editor\2022.3.62f3\Editor` |
+| `UNITYEDITOR_PATH` | Unity 编辑器目录 | `E:\Editor\6000.3.10f1\Editor` |
 | `BUILD_LOGFILE` | 打包日志 | `./Log/build.log` |
 | `BUILD_DLL_LOGFILE` | DLL 编译日志 | `./Log/build_dll.log` |
 

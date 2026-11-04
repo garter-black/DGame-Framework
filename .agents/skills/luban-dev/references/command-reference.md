@@ -162,7 +162,10 @@ dotnet Luban.dll \
 ### 生成多平台代码
 
 ```bash
-env -u NoDefaultCurrentDirectoryInExePath AUTO_CONTINUE=1 cmd //c 'GameConfig\GenerateTool_Binary\gen_bin_all_lazyload.bat'
+# gen_bin_all*.bat 结尾无条件 pause，AI 不调用；改为依次导客户端和服务端
+env -u NoDefaultCurrentDirectoryInExePath AUTO_CONTINUE=1 cmd //c 'GameConfig\GenerateTool_Binary\gen_bin_client_lazyload.bat'
+env -u NoDefaultCurrentDirectoryInExePath AUTO_CONTINUE=1 cmd //c 'GameConfig\GenerateTool_Binary\gen_bin_server_lazyload.bat'
+# 除 gen_bin_client_lazyload 外，脚本不传递 Luban 退出码，必须检查输出中的错误
 ```
 
 ### 排除测试数据
