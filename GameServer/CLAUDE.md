@@ -38,7 +38,7 @@
 dotnet build GameServer/Server/Server.sln --nologo
 ```
 
-协议变更先检查 `GameServer/Tools/ProtocolExportTool/ExporterSettings.json` 和协议源目录，再使用项目现有导出工具生成并检查服务端、客户端产物。配置变更按 `luban-dev` 的 validate/preview/apply 流程执行；生产导表和真实部署需要明确授权。
+协议变更先检查 `GameServer/Tools/ProtocolExportTool/ExporterSettings.json` 和协议源目录，再使用项目现有导出工具生成并检查服务端、客户端产物。项目导出工具（2025.2.1414）不支持 `define-common.md` 中的 `bytes`/`byte[]`，字节数组写成 `repeatedArray byte`；导出会让后续消息 opcode 后移，客户端和服务端必须同时发布。配置变更按 `luban-dev` 的 validate/preview/apply 流程执行；生产导表和真实部署需要明确授权。
 
 无法连接外部 Fantasy 服务、缺少 .NET SDK、协议导出工具或测试没有可运行用例时，应记录实际阻塞原因，不使用其他工程或旧结果替代。
 

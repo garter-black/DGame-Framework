@@ -23,7 +23,7 @@
 | 资源加载、释放、场景切换资源整理 | `../.agents/skills/dgame-dev/references/resource-api.md`、`../.agents/skills/dgame-dev/references/resource-patterns.md` |
 | 热更资源包、YooAsset 下载链路 | `../.agents/skills/dgame-dev/references/hotpatch-workflow.md` |
 | 整包、AB、Jenkins、ReleaseTools | `../.agents/skills/dgame-dev/references/build-pipeline.md` |
-| 热更代码、HybridCLR、AOT 泛型 | `../.agents/skills/dgame-dev/references/hotfix-workflow.md` |
+| 热更代码、HybridCLR、AOT 泛型 | `../.agents/skills/dgame-dev/references/hotfix-workflow.md`；本工程已关闭 HybridCLR、全部 IL2CPP AOT，热更代码流程不适用，见 `../Docs/SurvivorBattle.md`“性能数据” |
 | 模块 API、DataCenterModule、MemoryPool、Audio、Fsm | `../.agents/skills/dgame-dev/references/modules.md` |
 | 事件系统和事件反模式 | `../.agents/skills/dgame-dev/references/event-system.md`、`../.agents/skills/dgame-dev/references/event-antipatterns.md` |
 | Luban 配置消费 | `../.agents/skills/dgame-dev/references/luban-config.md`；编辑配置时使用 `../.agents/skills/luban-dev/` |
@@ -32,6 +32,7 @@
 | 排障 | `../.agents/skills/dgame-dev/references/troubleshooting.md` |
 | Fantasy Unity 客户端、Session/连接、消息 Handler、Fantasy ECS、协议和 Roaming | `../.agents/skills/fantasy-net/SKILL.md`；按主题读取 `../.agents/skills/fantasy-net/references/unity/`、`references/ecs/`、`references/protocol/`、`references/server/roaming/`；影响服务端协议或 Handler 时同时读取 `../GameServer/CLAUDE.md` |
 | Unity CLI / MCP | `../.agents/skills/unity-cli/SKILL.md`；组合验证按需使用 `../.agents/scripts/workflow.py` |
+| 幸存者战斗核心 `Assets/Scripts/HotFix/GameBattle/Survivor/`、表现层 `GameLogic/BattleSys/Survivor/` | `../Docs/SurvivorBattle.md`（确定性规则、新玩法步骤）；改动后运行 `dotnet run -c Release --project GameServer/Tools/BattleCheck` |
 
 处理 DGame 代码时优先使用 `dgame-dev`；内容以当前源码、目录和 API 为准。配置表结构、Excel、导表脚本和 `GameConfig/` 数据优先使用 `luban-dev`，再使用 `dgame-dev` 处理运行时消费。
 
@@ -58,21 +59,7 @@
 
 ## 验证入口
 
-日常验证通过 MCP 或直接 CLI 执行 `editor_status`、`recompile` / `recompile_status`、`list_tests`、`run_tests` / `test_status`，具体参数见 [操作规程](../.agents/skills/unity-cli/references/operations.md)。源码与程序集变更取得当前 Editor 编译证据；测试按影响范围选择模式和筛选器。
-
-需要离线检查、组合验证或 CI 报告时，从仓库根目录执行以下可选入口：
-
-```powershell
-python .agents/scripts/workflow.py doctor
-python .agents/scripts/workflow.py check
-python .agents/scripts/workflow.py verify --profile docs
-python .agents/scripts/workflow.py verify --profile code
-python .agents/scripts/workflow.py verify --profile unity --test-filter GameLogic
-python .agents/scripts/workflow.py verify --profile full
-```
-
-MCP、直接 CLI 与 Workflow 的 Unity 操作串行执行；新操作前核对本工程状态，状态轮询允许观察忙操作。Workflow 内的 Editor 阶段使用工程锁，直接工具调用不经过该锁；不得并行启动另一条导入、编译、测试或写入。`docs/code` 离线检查和解决方案构建是否纳入锁范围，以 `.agents/scripts/workflow.py` 的实现为准。
-Editor 断开、目标不唯一、筛选器没有可运行用例或测试结果不完整时，必须保持 `blocked`/`failed`；Editor 忙时等待并查询对应状态，不重发起始命令，不能使用旧结果或其他工程结果替代。
+源码与程序集变更必须取得当前 Editor 编译证据，测试按影响范围选择模式和筛选器。命令、Workflow profile、串行规则和 blocked/failed 判定统一见 [.agents/README.md](../.agents/README.md)“验证选择”，直接 CLI 参数见 [操作规程](../.agents/skills/unity-cli/references/operations.md)。
 
 ## 冲突与文档维护
 

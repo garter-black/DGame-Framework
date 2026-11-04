@@ -22,7 +22,7 @@ python .agents/scripts/workflow.py check
 
 Unity 日常查询、对象/资源操作、编译和测试使用已加载的原生 MCP 工具或直接 CLI，按 [unity-cli 技能](skills/unity-cli/SKILL.md) 核对当前工程。Workflow 用于组合验证、CI 和统一报告，Luban 生产导表继续使用其审批流程。
 
-小改按影响选择检查；跨模块、高风险或多阶段任务使用[任务模板](templates/task.md)记录目标、验收、决策、授权和证据。技能路由与授权边界以仓库规则为准。
+小改按影响选择检查。任务记录放在哪里（GitHub issue 或[任务模板](templates/task.md)）、技能路由与授权边界均以仓库规则为准。
 
 ## 环境与版本
 

@@ -3,6 +3,7 @@
 - ID: YYYYMMDD-short-name
 - 状态: planned / implementing / validating / blocked / complete
 - 负责人:
+- 关联 issue（如有）:
 
 ## 目标与验收
 

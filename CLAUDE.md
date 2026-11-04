@@ -2,11 +2,11 @@
 
 请使用中文写提案和回答。
 
-本文件是 DGame 仓库级规则。处理 `GameUnity/**` 下的文件时，还必须读取并遵守 [GameUnity/CLAUDE.md](GameUnity/CLAUDE.md)；处理 `GameServer/**` 下的文件时，还必须读取并遵守 [GameServer/CLAUDE.md](GameServer/CLAUDE.md)。子目录规则用于补充工程细节，和本文件冲突时以距离目标文件更近的规则为准。
+本文件是 DGame 仓库级规则。处理 `GameUnity/**` 下的文件时，还必须读取并遵守 [GameUnity/CLAUDE.md](GameUnity/CLAUDE.md)；处理 `GameServer/**` 下的文件时，还必须读取并遵守 [GameServer/CLAUDE.md](GameServer/CLAUDE.md)；处理 `GameConfig/**` 下的文件时，还必须读取并遵守 [GameConfig/CLAUDE.md](GameConfig/CLAUDE.md)。子目录规则用于补充工程细节，和本文件冲突时以距离目标文件更近的规则为准。
 
 ## 适用范围与规范源
 
-- 仓库级配置和工具位于 `GameConfig/`、`GameRelease/` 和 `Tools/`。
+- 仓库级配置和工具位于 `GameConfig/`、`GameRelease/` 和 `Tools/`；配置源规则见 [GameConfig/CLAUDE.md](GameConfig/CLAUDE.md)。
 - Unity 工程位于 `GameUnity/`，其工程级规则见 [GameUnity/CLAUDE.md](GameUnity/CLAUDE.md)。
 - Fantasy 服务端工程位于 `GameServer/`，其工程级规则见 [GameServer/CLAUDE.md](GameServer/CLAUDE.md)。
 - Agent Skills 位于 `.agents/skills/`；技能菜单未列出时，按路由直接读取 `.agents/skills/<技能名>/SKILL.md` 及相关 reference。技能和 Workflow 不维护第二套入口。
@@ -34,7 +34,7 @@
 
 同一会话中已经核对过的主题可以复用摘要；只有涉及新主题或发现文档与源码冲突时才重新查询。
 
-工作流、环境版本和验证矩阵见 [.agents/README.md](.agents/README.md)，Unity 命令以当前 MCP 工具描述、CLI 帮助和注册命令为准，Workflow 命令以 `.agents/scripts/workflow.py --help` 为准。L4、跨模块、配置导表、Unity 写入、构建和发布类任务必须使用 [.agents/templates/task.md](.agents/templates/task.md) 记录目标、授权、决策、验证证据和剩余风险；L1/L2 小改可不创建任务文件。
+工作流、环境版本和验证矩阵见 [.agents/README.md](.agents/README.md)，Unity 命令以当前 MCP 工具描述、CLI 帮助和注册命令为准，Workflow 命令以 `.agents/scripts/workflow.py --help` 为准。任务记录只保留一处：走 Matt 流程的任务以 GitHub issue（spec / ticket）记录目标、验收和决策，验证证据与剩余风险写在对应 issue 或 PR；不走 Matt 流程的 L4、跨模块、配置导表、Unity 写入、构建和发布类任务使用 [.agents/templates/task.md](.agents/templates/task.md)。issue 放不下的长证据（性能数据、导表对比）可写入任务文件并在 issue 中链接；L1/L2 小改不记录。
 
 ### 项目特有技能路由
 
