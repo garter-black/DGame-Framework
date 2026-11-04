@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "unity-cli-mcp": {
+      "command": "GameUnity/Tools/unity.exe",
+      "args": ["mcp", "--project-path", "GameUnity", "--no-log-proxy"],
+      "env": {
+        "UNITY_NO_UPDATE_CHECK": "1"
+      }
+    }
+  }
+}
