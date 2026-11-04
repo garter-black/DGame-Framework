@@ -1,0 +1,10 @@
+{
+  "states": [
+    "PENDING",
+    "PAID_VERIFIED",
+    "DELIVERED",
+    "FAILED_RETRY"
+  ],
+  "idempotencyKey": "orderId",
+  "maxRetries": 3
+}
