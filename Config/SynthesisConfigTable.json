@@ -1,0 +1,41 @@
+{
+  "version": "1.0.0",
+  "recipes": [
+    {
+      "recipeId": 1001,
+      "name": "高阶强化石",
+      "inputs": [
+        {
+          "itemId": 101,
+          "count": 3
+        }
+      ],
+      "output": {
+        "itemId": 201,
+        "count": 1
+      },
+      "goldCost": 500,
+      "successRateBps": 10000
+    },
+    {
+      "recipeId": 1002,
+      "name": "传说符文结晶",
+      "inputs": [
+        {
+          "itemId": 201,
+          "count": 2
+        },
+        {
+          "itemId": 105,
+          "count": 1
+        }
+      ],
+      "output": {
+        "itemId": 301,
+        "count": 1
+      },
+      "goldCost": 2000,
+      "successRateBps": 8500
+    }
+  ]
+}
