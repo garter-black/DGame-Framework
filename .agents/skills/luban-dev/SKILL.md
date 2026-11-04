@@ -39,11 +39,13 @@ description: DGame Luban 游戏配置全栈工具，支持枚举/Bean/数据表/
 
 根据操作系统选择对应扩展名。默认只导客户端 LazyLoad：
 
-**Windows：**
+**Windows（Claude Code 的 Git Bash）：**
 
-```powershell
-cmd /c "set AI_MODE=1 && GameConfig\GenerateTool_Binary\gen_bin_client_lazyload.bat"
+```bash
+env -u NoDefaultCurrentDirectoryInExePath AUTO_CONTINUE=1 cmd //c 'GameConfig\GenerateTool_Binary\gen_bin_client_lazyload.bat'
 ```
+
+脚本结尾检查 `AUTO_CONTINUE`，未设置会停在 `pause`；agent shell 设置的 `NoDefaultCurrentDirectoryInExePath` 会让脚本内的 `call path_define.bat` 找不到文件，必须去掉。
 
 **macOS/Linux：**
 

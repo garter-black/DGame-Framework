@@ -162,7 +162,7 @@ dotnet Luban.dll \
 ### 生成多平台代码
 
 ```bash
-cmd /c "set AI_MODE=1 && GameConfig\GenerateTool_Binary\gen_bin_all_lazyload.bat"
+env -u NoDefaultCurrentDirectoryInExePath AUTO_CONTINUE=1 cmd //c 'GameConfig\GenerateTool_Binary\gen_bin_all_lazyload.bat'
 ```
 
 ### 排除测试数据

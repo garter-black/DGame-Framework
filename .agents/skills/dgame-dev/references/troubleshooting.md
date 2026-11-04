@@ -48,7 +48,7 @@ iOS 真机高频问题是 Editor 正常，但 IL2CPP 裁剪后反射、泛型、
 
 ### 热更 DLL 加载失败
 
-1. `UpdateSettings.HotUpdateAssemblies` 是否包含 `GameProto.dll`、`GameBattle.dll`、`GameLogic.dll`。
+1. `UpdateSettings.HotUpdateAssemblies` 是否包含 `Fantasy.Unity.dll`、`GameProto.dll`、`GameBattle.dll`、`GameLogic.dll`。
 2. `UpdateSettings.LogicMainDllName` 是否为 `GameLogic.dll`。
 3. `Assets/BundleAssets/DLL/<dll>.dll.bytes` 是否存在并被 YooAsset 收集。
 4. `LoadAssemblyProcedure` 是否成功加载 AOT metadata 和所有热更 DLL。

@@ -39,7 +39,7 @@ public int NodeCount => m_nodeDict.Count;   // 公开属性：PascalCase
 | 框架模块实现 | `XxxModule` | `ResourceModule`、`AudioModule`、`FsmModule` | 通常位于 `GameUnity/Assets/DGame/Runtime/Module/` |
 | 热更业务模块接口 | `IXxxModule` | `ILocalizationModule`、`IInputModule` | 位于 `GameUnity/Assets/Scripts/HotFix/GameLogic/Module/` |
 | 热更业务模块实现 | `XxxModule` | `LocalizationModule`、`InputModule`、`UIModule` | 通过 `GameModule.XXX` 暴露访问入口 |
-| UIWindow 子类 | `XxxUI` / `XxxWindow` | `WaitingUI`、`TipsUI`、`MainWindow`、`GMPanel` | 新增窗口优先跟随所在目录现有命名 |
+| UIWindow 子类 | `XxxUI` / `XxxWindow` | `WaitingUI`、`TipsUI`、`MainLoginUI`、`GMPanel` | 新增窗口优先跟随所在目录现有命名 |
 | UIWidget 子类 | `XxxWidget` / `XxxItem` | `RedDotItem`、`UIFrameWidget`、`UILoopItemWidget` | 列表项、子组件、可复用 UI 单元 |
 | UI 控制器 | `XxxUIController` | `CommonUIController` | 实现 `IUIController`，集中注册 UI 事件 |
 | 事件接口 | `IXxxUI` / `IXxx` + `[EventInterface]` | `ICommonUI`、`ILoginUI`、`ILocalization` | 放 `GameLogic/IEvent/`，由生成器生成 `Ixxx_Event`、`Ixxx_Gen`、`GameEventHelper` |

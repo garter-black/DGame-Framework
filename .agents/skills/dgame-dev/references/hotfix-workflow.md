@@ -2,10 +2,13 @@
 
 > **适用场景**：HybridCLR、`GameStart`、热更 DLL、AOT metadata、程序集边界 | **关联文档**：[architecture.md](architecture.md)、[hotpatch-workflow.md](hotpatch-workflow.md)
 
+> **本项目已关闭 HybridCLR**（无 `ENABLE_HYBRIDCLR`，全部代码 IL2CPP AOT 出包）：下文 metadata、AOT 泛型补充、GenerateAll 等步骤当前不适用，“热更”程序集只表示分层归属。重新启用前先看 `Docs/SurvivorBattle.md` 的性能数据。
+
 ## 程序集边界
 
 | 程序集 | 是否热更 | 说明 |
 |--------|----------|------|
+| `Fantasy.Unity` | 是 | Fantasy 客户端网络框架源码（`Scripts/HotFix/Fantasy.Unity`） |
 | `DGame.AOT` | 否 | 启动流程、DLL 加载、AOT metadata |
 | `DGame.Runtime` | 否 | 框架运行时、模块接口与二次封装 |
 | `GameProto` | 是 | Luban 生成代码和协议配置 |
@@ -16,7 +19,7 @@
 
 | 字段 | 当前值 |
 |------|--------|
-| `HotUpdateAssemblies` | `GameProto.dll`、`GameBattle.dll`、`GameLogic.dll` |
+| `HotUpdateAssemblies` | `Fantasy.Unity.dll`、`GameProto.dll`、`GameBattle.dll`、`GameLogic.dll` |
 | `LogicMainDllName` | `GameLogic.dll` |
 | `AssemblyTextAssetPath` | `BundleAssets/DLL` |
 | `AssemblyTextAssetExtension` | `.bytes` |
@@ -45,7 +48,7 @@ public static void Entrance(object[] objects)
 - 入口方法必须是 public static `Entrance(object[] objects)`。
 - `GameEventLauncher.Init()` 是 DGame 接口事件初始化入口。
 
-> **热更层无 Procedure**：启动状态机（`XxxProcedure`）全在 `DGame.AOT`，热更业务不写 Procedure。`GameStart.StartGame()` 直接 `GameModule.UIModule.ShowWindow<MainWindow>()` 驱动首屏，新流程从这里往下接，不要去热更层找热更域状态机。
+> **热更层无 Procedure**：启动状态机（`XxxProcedure`）全在 `DGame.AOT`，热更业务不写 Procedure。`GameStart.StartGame()` 先检查 `BattleBench.TryRun()`（压测模式直接返回），再 `await GameClient.Instance.InitAsync(...)` 初始化 Fantasy 网络，最后 `ShowWindowAsync<MainLoginUI>()` 打开首屏；新流程从这里往下接，不要去热更层找热更域状态机。
 
 ---
 
@@ -151,7 +154,6 @@ HybridCLR.RuntimeApi.LoadMetadataForAOTAssembly(
 | 用 `dynamic`/Emit 绕过 AOT 泛型问题 | 补 AOT metadata 和显式泛型引用 |
 | 首包或 AOT 变动后未跑 GenerateAll | 启用 HybridCLR 热更新时先执行 `HybridCLR/Generate/All` |
 | 手工复制原始 AOT DLL | 复制 BuildPlayer 后裁剪 DLL |
-| 资源路径写 `BundleAssets/DLL` | DGame 使用 `BundleAssets/DLL` |
 
 ## 交叉引用
 

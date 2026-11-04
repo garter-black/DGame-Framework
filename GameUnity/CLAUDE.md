@@ -54,6 +54,7 @@
 - Fantasy Unity 运行时与 WebSocket 实现位于 `Assets/Scripts/HotFix/Fantasy.Unity/Runtime`；编辑器设置、程序集链接和 `FANTASY_UNITY` / `FANTASY_WEBGL` 定义管理位于同目录的 `Editor/Runtime`。
 - 客户端连接、Session、网络请求和消息收发位于 `Assets/Scripts/HotFix/GameLogic`；战斗侧 Fantasy ECS 位于 `Assets/Scripts/HotFix/GameBattle`。
 - `Assets/Scripts/HotFix/GameProto/Generate/NetworkProtocol` 是协议导出产物；协议源和导出配置以仓库根目录 `GameServer/Tools/NetworkProtocol`、`GameServer/Tools/ProtocolExportTool/ExporterSettings.json` 为准，生成文件不得手改。
+- 客户端网络写法以本项目封装为准，与 `fantasy-net` 的 `unity/` 文档不同：连接走 `GameLogic/DataCenter/GameClient.cs`（`Scene.Connect` + KCP），请求用 `GameClient.Instance.Call(new Xxx { ... })`，推送在 `DataCenterModule` 的 `OnInit` 里用 `GameClient.Instance.RegisterMsgHandler(OuterOpcode.Xxx, handler)` 注册，按业务写在 `GameLogic/NetworkMgr/XxxNetMgr.cs`（参考 `RoomNetMgr`）。不使用 `Runtime.Connect`、`FantasyRuntime` 组件或 `Message<Session, T>` 推送 Handler；Fantasy.Unity 以源码形式位于 `HotFix/Fantasy.Unity`，不走 UPM 安装。
 - Fantasy 客户端异步逻辑使用 `FTask` 和 Fantasy Session/连接 API；涉及跨服路由时按 `fantasy-net` 的 Address、Roaming、SphereEvent 规则核对服务端对应实现。
 - 客户端协议、消息签名、Session/连接流程或消息 Handler 变更影响服务端时，必须同时读取 [GameServer/CLAUDE.md](../GameServer/CLAUDE.md)，核对服务端 Outer/Inner 协议、Handler、Scene 和端口配置。
 

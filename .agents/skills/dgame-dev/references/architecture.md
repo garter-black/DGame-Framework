@@ -42,7 +42,8 @@
 | `DGame.Runtime` | `GameUnity/Assets/DGame/Runtime` | 否 | 框架运行时、模块、通用工具 |
 | `DGame.Editor` | `GameUnity/Assets/DGame/Editor` | 否 | 编辑器工具、打包工具、Inspector |
 | `DGame.AOT` | `GameUnity/Assets/DGame.AOT` | 否 | AOT 流程、资源更新、热更 DLL 加载 |
-| `GameProto` | `GameUnity/Assets/Scripts/HotFix/GameProto` | 是 | Luban 生成代码和 `ConfigSystem` |
+| `Fantasy.Unity` | `GameUnity/Assets/Scripts/HotFix/Fantasy.Unity` | 是 | Fantasy 客户端网络框架源码 |
+| `GameProto` | `GameUnity/Assets/Scripts/HotFix/GameProto` | 是 | Luban 生成代码、协议生成代码和 `ConfigSystem` |
 | `GameLogic` | `GameUnity/Assets/Scripts/HotFix/GameLogic` | 是 | 主热更业务、UI、业务模块 |
 | `GameBattle` | `GameUnity/Assets/Scripts/HotFix/GameBattle` | 是 | 战斗域逻辑 |
 
@@ -96,7 +97,7 @@ location/addressable 约定：
 - 业务代码通过 `GameModule.ResourceModule` 加载资源，不使用 `Resources.Load()`。
 - `UpdateSettings.EnableAddressable` 由资源包配置决定；为 true 时，DLL location 可直接使用 `GameLogic.dll`、`DGame.Runtime.dll` 这类地址。
 - 为 false 时，`LoadAssemblyProcedure` 会按 `Assets/<AssemblyTextAssetPath>/<dll><AssemblyTextAssetExtension>` 拼接 location；当前默认配置是 `Assets/BundleAssets/DLL/<dll>.bytes`。
-- `LoadAssemblyProcedure.cs:316` 的 `Resources.Load<TextAsset>("Obfuz/defaultStaticSecretKey")` 是 AOT 框架层加载 Obfuz 密钥的例外，不作为热更业务资源加载模板。
+- `LoadAssemblyProcedure.cs` 中 的 `Resources.Load<TextAsset>("Obfuz/defaultStaticSecretKey")` 是 AOT 框架层加载 Obfuz 密钥的例外，不作为热更业务资源加载模板。
 
 ---
 

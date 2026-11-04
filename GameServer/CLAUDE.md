@@ -18,6 +18,18 @@
 
 涉及 Fantasy 服务端、ECS Entity/Component/System、Scene/SubScene、FTask、Handler、事件、Timer、Address、Roaming、SphereEvent、Fantasy.config、数据库、HTTP、Session 或协议导出时，必须读取 [fantasy-net skill](../.agents/skills/fantasy-net/SKILL.md) 及对应 reference。涉及客户端连接、Session、消息 Handler 或 Unity 协议生成时，同时读取 [GameUnity/CLAUDE.md](../GameUnity/CLAUDE.md)。
 
+本项目使用 `Fantasy-Net 2026.1.2002`，`fantasy-net` 部分 reference 对应其他版本。以下写法在当前版本不存在，按右侧处理：
+
+| reference 写法 | 当前项目 |
+|---|---|
+| `session.TryCreateRoaming`、`CreateRoamingResult`、`CreateRoamingStatus` | 当前版本只有 `GetOrCreateRoaming`，使用前先核对其签名 |
+| `ISupportedDataBase` | 持久化实体实现 `ISupportedSerialize` |
+| `scene.World.SelectDatabase(...)`、`scene.World[DatabaseName.xxx]` | 使用 `scene.World.Database`（每个 world 只配一个库） |
+| `dotnet fantasy-export`、`Fantasy.config` 中的 `<roamingType>` | 在 `Tools/ProtocolExportTool` 执行 `dotnet Fantasy.ProtocolExportTool.dll export --silent`；RoamingType 写在 `Tools/NetworkProtocol/RoamingType.Config` |
+| 协议字段 `bytes` / `byte[]` | 写 `repeatedArray byte` |
+
+服务端 Handler、System 使用 `namespace Hotfix;`，监听器和 Handler 一律 `sealed`（部分 reference 示例漏写）。
+
 涉及 Luban 表结构、配置源、导表或生成配置时，同时读取 [luban-dev skill](../.agents/skills/luban-dev/SKILL.md)；运行时消费链路再按需要读取 `dgame-dev`。
 
 ## 目录与修改约束
@@ -38,7 +50,7 @@
 dotnet build GameServer/Server/Server.sln --nologo
 ```
 
-协议变更先检查 `GameServer/Tools/ProtocolExportTool/ExporterSettings.json` 和协议源目录，再使用项目现有导出工具生成并检查服务端、客户端产物。项目导出工具（2025.2.1414）不支持 `define-common.md` 中的 `bytes`/`byte[]`，字节数组写成 `repeatedArray byte`；导出会让后续消息 opcode 后移，客户端和服务端必须同时发布。配置变更按 `luban-dev` 的 validate/preview/apply 流程执行；生产导表和真实部署需要明确授权。
+协议变更先检查 `GameServer/Tools/ProtocolExportTool/ExporterSettings.json` 和协议源目录，再使用项目现有导出工具生成并检查服务端、客户端产物。导出会让后续消息 opcode 后移，客户端和服务端必须同时发布。配置变更按 `luban-dev` 的 validate/preview/apply 流程执行；生产导表和真实部署需要明确授权。
 
 无法连接外部 Fantasy 服务、缺少 .NET SDK、协议导出工具或测试没有可运行用例时，应记录实际阻塞原因，不使用其他工程或旧结果替代。
 

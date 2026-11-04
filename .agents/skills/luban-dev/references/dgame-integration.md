@@ -37,9 +37,11 @@ GameUnity/Assets/Scripts/HotFix/GameLogic/ConfigMgr/  # 业务配置管理器
 
 优先使用客户端 LazyLoad：
 
-```powershell
-cmd /c "set AI_MODE=1 && GameConfig\GenerateTool_Binary\gen_bin_client_lazyload.bat"
+```bash
+env -u NoDefaultCurrentDirectoryInExePath AUTO_CONTINUE=1 cmd //c 'GameConfig\GenerateTool_Binary\gen_bin_client_lazyload.bat'
 ```
+
+调用约束见 [SKILL.md](../SKILL.md)“AI 调用导表命令”。
 
 脚本行为：
 
