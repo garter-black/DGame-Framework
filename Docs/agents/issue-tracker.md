@@ -1,48 +1,48 @@
-# Issue tracker: GitHub
+# Issue 追踪：GitHub（Issue tracker）
 
-Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
+本仓库的 issue 和 spec 都以 GitHub issue 保存，所有操作使用 `gh` CLI。
 
-## Conventions
+## 约定（Conventions）
 
-- **Create an issue**: `gh issue create --title "..." --body "..."`. Use a heredoc for multi-line bodies.
-- **Read an issue**: `gh issue view <number> --json number,title,body,labels,comments`.
-- **List issues**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` with appropriate `--label` and `--state` filters.
-- **Make an issue a sub-issue of a parent**: `gh issue create --parent <parent> ...`, or `gh issue edit <parent> --add-sub-issue <child>` afterwards (`gh` 2.94+). Older `gh`: `gh api --method POST repos/fuyuoo/DGame-Framework/issues/<parent>/sub_issues -F sub_issue_id=<child-db-id>` (database id, as in **Blocking** below). Without sub-issues, put `Part of #<parent>` at the top of the child body.
-- **Blocking**: GitHub's **native issue dependencies**, the canonical, UI-visible representation. Add an edge with `gh issue create --blocked-by <n>,<n> ...` or `gh issue edit <child> --add-blocked-by <blocker>` (`gh` 2.94+). Older `gh`: `gh api --method POST repos/fuyuoo/DGame-Framework/issues/<child>/dependencies/blocked_by -F issue_id=<blocker-db-id>`, where `<blocker-db-id>` is the blocker's numeric **database id** (`gh api repos/fuyuoo/DGame-Framework/issues/<n> --jq .id`, _not_ the `#number` or `node_id`). Where dependencies aren't available, fall back to a `Blocked by: #<n>, #<n>` line at the top of the child body. A ticket is unblocked when every blocker is closed.
-- **Count open blockers**: `gh api repos/fuyuoo/DGame-Framework/issues/<n> --jq .issue_dependencies_summary.blocked_by` (open blockers only; 0 means startable). `gh issue view <n> --json blockedBy` also lists closed blockers, so filter it: `--jq '[.blockedBy.nodes[] | select(.state == "OPEN")] | length'`.
-- **Comment on an issue**: `gh issue comment <number> --body "..."`
-- **Apply / remove labels**: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`
-- **Close**: post the explanation with `gh issue comment <number> --body "..."`, then `gh issue close <number>`. On an already-closed issue, `gh issue close --comment` drops the comment and still exits 0.
+- **创建 issue（Create an issue）**：`gh issue create --title "..." --body "..."`。多行正文使用 heredoc。
+- **读取 issue（Read an issue）**：`gh issue view <number> --json number,title,body,labels,comments`。
+- **列出 issue（List issues）**：`gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'`，按需加 `--label`、`--state` 过滤。
+- **设为父 issue 的子 issue（Make an issue a sub-issue of a parent）**：`gh issue create --parent <parent> ...`，或事后 `gh issue edit <parent> --add-sub-issue <child>`（`gh` 2.94+）。旧版 `gh`：`gh api --method POST repos/fuyuoo/DGame-Framework/issues/<parent>/sub_issues -F sub_issue_id=<child-db-id>`（数据库 id，见下方“阻塞”）。不支持子 issue 时，在子 issue 正文顶部写 `Part of #<parent>`。
+- **阻塞（Blocking）**：使用 GitHub **原生 issue 依赖**，这是界面可见的标准表示。用 `gh issue create --blocked-by <n>,<n> ...` 或 `gh issue edit <child> --add-blocked-by <blocker>` 添加（`gh` 2.94+）。旧版 `gh`：`gh api --method POST repos/fuyuoo/DGame-Framework/issues/<child>/dependencies/blocked_by -F issue_id=<blocker-db-id>`，其中 `<blocker-db-id>` 是阻塞方的数字**数据库 id**（`gh api repos/fuyuoo/DGame-Framework/issues/<n> --jq .id`，_不是_ `#编号` 或 `node_id`）。不支持依赖时，在子 issue 正文顶部写 `Blocked by: #<n>, #<n>`。所有阻塞方关闭后，该 ticket 即解除阻塞。
+- **统计未关闭的阻塞方（Count open blockers）**：`gh api repos/fuyuoo/DGame-Framework/issues/<n> --jq .issue_dependencies_summary.blocked_by`（只计未关闭的；0 表示可以开始）。`gh issue view <n> --json blockedBy` 会包含已关闭的阻塞方，需过滤：`--jq '[.blockedBy.nodes[] | select(.state == "OPEN")] | length'`。
+- **评论（Comment on an issue）**：`gh issue comment <number> --body "..."`
+- **添加 / 移除标签（Apply / remove labels）**：`gh issue edit <number> --add-label "..."` / `--remove-label "..."`
+- **关闭（Close）**：先用 `gh issue comment <number> --body "..."` 写明原因，再 `gh issue close <number>`。对已关闭的 issue，`gh issue close --comment` 会丢弃评论且仍返回 0。
 
-This clone has two remotes (`origin` = fork, `upstream` = AmaniDawn/DGame) and no `gh` default repo, so always pass `-R fuyuoo/DGame-Framework` to `gh issue` / `gh pr` / `gh label`. In `gh api` paths use `repos/fuyuoo/DGame-Framework/...`. Never file into `AmaniDawn/DGame` or `mattpocock/skills`.
+本地有两个远端（`origin` = fork，`upstream` = AmaniDawn/DGame），且没有设置 `gh` 默认仓库，所以 `gh issue` / `gh pr` / `gh label` 一律带 `-R fuyuoo/DGame-Framework`；`gh api` 路径使用 `repos/fuyuoo/DGame-Framework/...`。不要向 `AmaniDawn/DGame` 或 `mattpocock/skills` 提交 issue。
 
-## Pull requests as a triage surface
+## PR 作为分诊入口（Pull requests as a triage surface）
 
-**PRs as a request surface: no.** _(Set to `yes` if this repo treats external PRs as feature requests; `/triage` reads this flag.)_
+**PR 作为需求入口：否（no）。** _（如果本仓库把外部 PR 当作功能请求，改为 `yes`；`/triage` 会读取此项。）_
 
-When set to `yes`, PRs run through the same labels and states as issues, using the `gh pr` equivalents:
+设为 `yes` 时，PR 与 issue 使用相同的标签和状态，对应 `gh pr` 命令：
 
-- **Read a PR**: `gh pr view <number>`, then `gh pr view <number> --comments` (off a TTY, `--comments` prints only the comments, not the body), and `gh pr diff <number>` for the diff.
-- **List external PRs for triage**: `gh api --paginate 'repos/{owner}/{repo}/pulls?state=open' --jq '.[] | select(.author_association | IN("OWNER","MEMBER","COLLABORATOR") | not) | {number, title, author: .user.login, author_association, labels: [.labels[].name]}'`.
-- **Comment / label / close**: `gh pr comment`, `gh pr edit --add-label`/`--remove-label`, `gh pr close`.
+- **读取 PR（Read a PR）**：`gh pr view <number>`，再 `gh pr view <number> --comments`（非 TTY 下 `--comments` 只输出评论、不含正文），`gh pr diff <number>` 查看 diff。
+- **列出待分诊的外部 PR**：`gh api --paginate 'repos/{owner}/{repo}/pulls?state=open' --jq '.[] | select(.author_association | IN("OWNER","MEMBER","COLLABORATOR") | not) | {number, title, author: .user.login, author_association, labels: [.labels[].name]}'`。
+- **评论 / 标签 / 关闭**：`gh pr comment`、`gh pr edit --add-label`/`--remove-label`、`gh pr close`。
 
-GitHub shares one number space across issues and PRs, so a bare `#42` may be either: resolve with `gh pr view 42` and fall back to `gh issue view 42`.
+GitHub 的 issue 和 PR 共用编号，单独的 `#42` 可能是任一种：先 `gh pr view 42`，失败再 `gh issue view 42`。
 
-## When a skill says "publish to the issue tracker"
+## 技能说“发布到 issue tracker”时（publish to the issue tracker）
 
-Create a GitHub issue.
+创建一个 GitHub issue。
 
-## When a skill says "fetch the relevant ticket"
+## 技能说“获取相关 ticket”时（fetch the relevant ticket）
 
-Read it as in **Read an issue** above.
+按上方“读取 issue”读取。
 
-## Wayfinding operations
+## Wayfinding 操作（Wayfinding operations）
 
-Used by `/wayfinder`. The **map** is a single issue with **child** issues as tickets.
+供 `/wayfinder` 使用。**地图（map）** 是一个 issue，其 **子 issue（child）** 就是各个 ticket。
 
-- **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body. `gh issue create --label wayfinder:map`.
-- **Child ticket**: an issue linked to the map as a GitHub sub-issue (see **Make an issue a sub-issue of a parent**). Where sub-issues aren't enabled, add the child to a task list in the map body and put `Part of #<map>` at the top of the child body. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, the ticket is assigned to the driving dev.
-- **Blocking**: see **Blocking** under Conventions.
-- **Frontier query**: list the map's open children (`gh issue list --state open`, scoped to the map's sub-issues / task list), drop any with an open blocker (see **Count open blockers**, or an open issue in the `Blocked by` line) or an assignee; first in map order wins.
-- **Claim**: `gh issue edit <n> --add-assignee @me`, the session's first write.
-- **Resolve**: `gh issue comment <n> --body "<answer>"`, then `gh issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
+- **地图（Map）**：一个带 `wayfinder:map` 标签的 issue，正文包含 Notes / Decisions-so-far / Fog。`gh issue create --label wayfinder:map`。
+- **子 ticket（Child ticket）**：以 GitHub 子 issue 方式挂到地图下（见“设为父 issue 的子 issue”）。不支持子 issue 时，把它加入地图正文的任务列表，并在子 issue 正文顶部写 `Part of #<map>`。标签：`wayfinder:<type>`（`research`/`prototype`/`grilling`/`task`）。认领后指派给负责的开发者。
+- **阻塞（Blocking）**：见“约定”中的“阻塞”。
+- **前沿查询（Frontier query）**：列出地图下未关闭的子 issue（`gh issue list --state open`，限定在地图的子 issue / 任务列表内），去掉仍有未关闭阻塞方（见“统计未关闭的阻塞方”，或 `Blocked by` 行中仍未关闭的 issue）或已有指派人的，按地图顺序取第一个。
+- **认领（Claim）**：`gh issue edit <n> --add-assignee @me`，作为本次会话的第一个写操作。
+- **解决（Resolve）**：`gh issue comment <n> --body "<答案>"`，再 `gh issue close <n>`，然后在地图的 Decisions-so-far 中追加一条上下文指针（要点 + 链接）。

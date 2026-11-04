@@ -1,18 +1,18 @@
-# Domain Docs
+# 领域文档（Domain Docs）
 
-How the engineering skills should consume this repo's domain documentation when exploring the codebase.
+工程类技能在探索代码库时如何使用本仓库的领域文档。
 
-## Before exploring, read these
+## 探索前先读
 
-- **`GLOSSARY.md`** at the repo root, or
-- **`GLOSSARY-MAP.md`** at the repo root if it exists: it points at one `GLOSSARY.md` per context. Read each one relevant to the topic.
-- **`Docs/adr/`**: read ADRs that touch the area you're about to work in. In multi-context repos, also check `src/<context>/Docs/adr/` for context-scoped decisions.
+- 仓库根目录的 **`GLOSSARY.md`**；或
+- 若根目录存在 **`GLOSSARY-MAP.md`**，按它的指引读取每个上下文各自的 `GLOSSARY.md`，只读与当前主题相关的。
+- **`Docs/adr/`**：读取与将要修改区域相关的 ADR。多上下文仓库还要检查 `src/<context>/Docs/adr/` 中的上下文级决策。
 
-If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. The `/domain-modeling` skill (reached via `/grill-with-docs` and `/improve-codebase-architecture`) creates them lazily when terms or decisions actually get resolved.
+以上文件不存在时**直接继续**，不要提示缺失，也不要建议预先创建。`/domain-modeling` 技能（通过 `/grill-with-docs` 和 `/improve-codebase-architecture` 触发）会在术语或决策真正确定时按需创建。
 
-## File structure
+## 文件结构
 
-Single-context repo (most repos):
+单上下文仓库（大多数情况，本仓库属于此类）：
 
 ```
 /
@@ -23,29 +23,29 @@ Single-context repo (most repos):
 └── src/
 ```
 
-Multi-context repo (presence of `GLOSSARY-MAP.md` at the root):
+多上下文仓库（根目录存在 `GLOSSARY-MAP.md`）：
 
 ```
 /
 ├── GLOSSARY-MAP.md
-├── Docs/adr/                          ← system-wide decisions
+├── Docs/adr/                          ← 全系统决策
 └── src/
     ├── ordering/
     │   ├── GLOSSARY.md
-    │   └── Docs/adr/                  ← context-specific decisions
+    │   └── Docs/adr/                  ← 上下文级决策
     └── billing/
         ├── GLOSSARY.md
         └── Docs/adr/
 ```
 
-## Use the glossary's vocabulary
+## 使用术语表中的词汇
 
-When your output names a domain concept (in an issue title, a refactor proposal, a hypothesis, a test name), use the term as defined in `GLOSSARY.md`. Don't drift to synonyms the glossary explicitly avoids.
+输出中提到领域概念时（issue 标题、重构提案、假设、测试名），使用 `GLOSSARY.md` 中定义的术语，不要换成术语表明确避免的同义词。
 
-If the concept you need isn't in the glossary yet, that's a signal: either you're inventing language the project doesn't use (reconsider) or there's a real gap (note it for `/domain-modeling`).
+如果需要的概念不在术语表中，说明两种可能：要么是在发明项目不用的说法（应重新考虑），要么是确实存在空缺（记下来交给 `/domain-modeling`）。
 
-## Flag ADR conflicts
+## 标出与 ADR 的冲突
 
-If your output contradicts an existing ADR, surface it explicitly rather than silently overriding:
+如果输出与已有 ADR 矛盾，要明确指出，不要静默覆盖：
 
-> _Contradicts ADR-0007 (event-sourced orders), but worth reopening because…_
+> _与 ADR-0007（订单事件溯源）矛盾，但值得重新讨论，因为……_
