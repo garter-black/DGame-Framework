@@ -91,6 +91,12 @@ Survivor 目录里禁止：
 - 关闭 HybridCLR：菜单 DGame Tools/HybridCLR/禁用HybridCLR（关闭 HybridCLR 并去掉所有平台的 ENABLE_HYBRIDCLR 宏），然后直接 AutoBuildWindow，无需 Generate All；运行时跳过热更 DLL 加载，直接使用包内程序集。
 - 复测：打包后运行 `Release_Windows.exe -battleBench`，结果写入 `%USERPROFILE%/AppData/LocalLow/DefaultCompany/GameUnity/battle_bench.txt`。
 
+## AI 工具接入
+
+- Claude Code 读取仓库根 `.mcp.json` 的 `unity-cli-mcp`（与 `.codex/config.toml` 相同），提供 editor_status / recompile / run_tests 等约 140 个 Unity 工具。
+- **先打开 Unity 编辑器再启动 Claude Code 会话**：工具列表在会话启动时拉取，编辑器没开时为 0 个；之后再开编辑器需重启会话或在 /mcp 里重连 unity-cli-mcp。
+- 未加载 MCP 时，可直接用 `GameUnity/Tools/unity.exe command --project-path <GameUnity 绝对路径> <命令>`。
+
 ## 配置表转表（Luban）
 
 新机器首次准备（这两样被 `.gitignore` 忽略，不在仓库里）：
