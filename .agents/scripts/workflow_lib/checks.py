@@ -108,7 +108,7 @@ def structure(context):
                     errors.append("luban-dev: implicit invocation policy must be enabled")
         except (OSError, ValueError, yaml.YAMLError) as exc:
             errors.append(f"{name}: invalid metadata: {exc}")
-    docs = [context.repo / "AGENTS.md", context.project / "AGENTS.md", context.repo / "README.md"]
+    docs = [context.repo / "CLAUDE.md", context.project / "CLAUDE.md", context.repo / "README.md"]
     for name in SKILLS:
         docs.extend((root / "skills" / name).rglob("*.md"))
     for path in docs:
@@ -120,7 +120,7 @@ def structure(context):
             # Validate only the AI workflow section; other product links are out of scope.
             match = re.search(r"^## .*AI.*(?:\n.*)*", text, re.M)
             text = match[0].split("\n## ", 1)[0] if match else ""
-            if not text or "AGENTS.md" not in text:
+            if not text or "CLAUDE.md" not in text:
                 errors.append("README workflow entry is missing")
         if re.search(r"(?:^|\s)(?:[A-Za-z]:[\\/](?:Users|WorkSpace)[\\/]|/Users/[^\s/]+/)", text):
             errors.append(f"Machine-specific path in {path}")

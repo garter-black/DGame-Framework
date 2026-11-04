@@ -20,13 +20,13 @@
 
 **DGame** 是在 [TEngine](https://github.com/ALEXTANGXIAO/TEngine) 基础上深度优化演进的 Unity 游戏框架。保留 TEngine 核心优势的同时，针对商业游戏开发需求**新增了多个核心模块**，并对现有系统进行了**部分优化**。
 
-> 📝 本文档按当前仓库源码和项目配置维护；API、路径和验证方式以实际源码及 `AGENTS.md` 为准。
+> 📝 本文档按当前仓库源码和项目配置维护；API、路径和验证方式以实际源码及 `CLAUDE.md` 为准。
 >
 > 新增功能均在多个商业化游戏及百万DAU项目经过验证。
 >
 > Fantasy线和TE同步接入服务器框架[Fantasy](https://github.com/qq362946/Fantasy)，区别在于TE接入的就更纯净简洁，本项目可能会做更多的项目细节和实用工具方法处理。
 >
-> 本仓库通过 `dgame-dev`、`unity-cli` 和 `luban-dev` 提供项目内开发与验证辅助，详细规则见 `AGENTS.md`。
+> 本仓库通过 `dgame-dev`、`unity-cli` 和 `luban-dev` 提供项目内开发与验证辅助，详细规则见 `CLAUDE.md`。
 
 ### ✨ 核心特性
 
@@ -157,9 +157,9 @@
 
 ---
 
-## 🤖 AI 协作开发（Claude Code / Codex）
+## 🤖 AI 协作开发（Claude Code）
 
-本仓库使用共享的 Agent Skills，技能位于 `.agents/skills/dgame-dev/`、`.agents/skills/unity-cli/` 和 `.agents/skills/luban-dev/`。Claude Code 与 Codex 都先读取 `AGENTS.md`，再按任务读取对应 `SKILL.md`；Unity 工程内还要读取 `GameUnity/AGENTS.md`。
+本仓库使用共享的 Agent Skills，技能位于 `.agents/skills/dgame-dev/`、`.agents/skills/unity-cli/` 和 `.agents/skills/luban-dev/`。Claude Code 先读取 `CLAUDE.md`，再按任务读取对应 `SKILL.md`；Unity 工程内还要读取 `GameUnity/CLAUDE.md`，服务端读取 `GameServer/CLAUDE.md`。
 
 ### 推荐工作流
 

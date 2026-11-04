@@ -1,13 +1,13 @@
 # DGame Agent Skills
 
-`.agents/` 是仓库内唯一的 Agent Skills 与验证工具目录。两个工具共用根目录的 `AGENTS.md`，再按任务读取这里的技能：
+`.agents/` 是仓库内唯一的 Agent Skills 与验证工具目录。Claude Code 先读取根目录的 `CLAUDE.md`，再按任务读取这里的技能：
 
 - `skills/dgame-dev/SKILL.md`：DGame Unity 业务与架构
 - `skills/luban-dev/SKILL.md`：Luban 配置、校验与导表
 - `skills/unity-cli/SKILL.md`：原生 MCP / Unity CLI 操作、连接与验证
 - `skills/fantasy-net/SKILL.md`：Fantasy 服务端与 Unity 客户端、ECS、协议、Roaming、事件、数据库与分布式运行时
 
-技能目录遵循 Agent Skills 结构：入口为 `SKILL.md`，详细资料放在 `references/`，可执行辅助脚本放在 `scripts/`。`agents/openai.yaml` 只提供 Codex 的界面元数据，不影响 Claude Code 读取 `SKILL.md`。
+技能目录遵循 Agent Skills 结构：入口为 `SKILL.md`，详细资料放在 `references/`，可执行辅助脚本放在 `scripts/`。`agents/openai.yaml` 是遗留的界面元数据，不影响 Claude Code 读取 `SKILL.md`。
 
 需要仓库结构检查或环境报告时，从仓库根目录运行 Workflow：
 
@@ -18,7 +18,7 @@ python .agents/scripts/workflow.py check
 
 ## 工作流程
 
-读取[仓库规则](../AGENTS.md)和对应的[Unity 工程规则](../GameUnity/AGENTS.md)或[服务端工程规则](../GameServer/AGENTS.md)，检查已有修改，按任务读取源码与相关技能，再实施、验证和交付证据。API、程序集和实际工具结果优先于参考文档。
+读取[仓库规则](../CLAUDE.md)和对应的[Unity 工程规则](../GameUnity/CLAUDE.md)或[服务端工程规则](../GameServer/CLAUDE.md)，检查已有修改，按任务读取源码与相关技能，再实施、验证和交付证据。API、程序集和实际工具结果优先于参考文档。
 
 Unity 日常查询、对象/资源操作、编译和测试使用已加载的原生 MCP 工具或直接 CLI，按 [unity-cli 技能](skills/unity-cli/SKILL.md) 核对当前工程。Workflow 用于组合验证、CI 和统一报告，Luban 生产导表继续使用其审批流程。
 
@@ -101,4 +101,4 @@ report 不执行缺失阶段，中断报告保持 blocked。CI 保留实际退�
 
 技能提供任务知识与原生命令用法；MCP 工具由客户端配置的 Unity CLI 服务独立暴露。Pipeline 注册命令的名称、描述和参数 Schema 同时供 CLI 与 MCP 使用，Workflow 的目录不参与 MCP 工具发现。技能的 `allow_implicit_invocation` 只允许自动选择技能，不注册 MCP 服务、不设置工具优先级。已有通用服务可用时核对目标工程后复用，不要求另建项目服务。
 
-Claude Code 原生会读取仓库级 `AGENTS.md`。Claude 的技能菜单自动发现仍由其自身的 `.claude/skills` 目录控制；在只保留 `.agents` 的布局下，应通过 `AGENTS.md` 的任务路由读取对应 `SKILL.md`。Codex 使用同一入口和 `.agents/skills` 内容。
+Claude Code 启动时读取根目录 `CLAUDE.md`，访问 `GameUnity/`、`GameServer/` 时按需加载对应子目录的 `CLAUDE.md`。项目技能不在 Claude 技能菜单中，按 `CLAUDE.md` 的任务路由直接读取对应 `SKILL.md`。

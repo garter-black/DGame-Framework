@@ -1,7 +1,115 @@
-# Claude Code 项目入口
+# CLAUDE.md
 
-@AGENTS.md
+请使用中文写提案和回答。
 
-公共项目规范、技能路由和验证入口见上方导入的 `AGENTS.md`。涉及 Unity 客户端、DGame 框架或 Unity 资源时，先读取 [GameUnity/AGENTS.md](GameUnity/AGENTS.md)；涉及 Fantasy 服务端、协议或服务端配置时，先读取 [GameServer/AGENTS.md](GameServer/AGENTS.md)。规则分别维护在对应的 `AGENTS.md` 中。
+本文件是 DGame 仓库级规则。处理 `GameUnity/**` 下的文件时，还必须读取并遵守 [GameUnity/CLAUDE.md](GameUnity/CLAUDE.md)；处理 `GameServer/**` 下的文件时，还必须读取并遵守 [GameServer/CLAUDE.md](GameServer/CLAUDE.md)。子目录规则用于补充工程细节，和本文件冲突时以距离目标文件更近的规则为准。
 
-按路由直接读取 `.agents/skills/<技能名>/SKILL.md` 及相关 reference；技能菜单未列出时仍使用这些文件。项目验证从仓库根目录运行 `.agents/scripts/workflow.py`，具体参数遵循共享规范。
+## 适用范围与规范源
+
+- 仓库级配置和工具位于 `GameConfig/`、`GameRelease/` 和 `Tools/`。
+- Unity 工程位于 `GameUnity/`，其工程级规则见 [GameUnity/CLAUDE.md](GameUnity/CLAUDE.md)。
+- Fantasy 服务端工程位于 `GameServer/`，其工程级规则见 [GameServer/CLAUDE.md](GameServer/CLAUDE.md)。
+- Agent Skills 位于 `.agents/skills/`；技能菜单未列出时，按路由直接读取 `.agents/skills/<技能名>/SKILL.md` 及相关 reference。技能和 Workflow 不维护第二套入口。
+- 本项目特有的 Fantasy 服务端与 Unity 客户端开发、ECS、协议、Roaming、事件、数据库和分布式运行时规则位于 `.agents/skills/fantasy-net/`。
+- 不回滚用户已有改动，不删除与当前任务无关的文件。
+
+## 工作方式
+
+1. 先阅读相关实现和 `git status`，确认已有改动边界。
+2. 按任务影响范围选择验证方式；跨模块、高风险或多阶段任务先明确目标和验收条件。
+3. 读取对应 skill 的 `SKILL.md` 及必要的 reference。配置表、Excel、导表脚本和 `GameConfig/` 数据优先使用 `.agents/skills/luban-dev/`；Fantasy 相关任务优先使用 `.agents/skills/fantasy-net/SKILL.md`。
+4. 源码用代码编辑工具修改；Unity 操作使用 Unity CLI 原生 MCP 工具或 `unity command`，入口选择和工程核对见 `unity-cli` 技能。Workflow 按需用于组合验证、CI 和配置导表。完成后执行与变更匹配的检查，并报告实际结果、限制和剩余风险。
+5. 当 reference 与源码冲突时，使用 `rg` 核对实际签名和调用点，优先信任当前源码，并记录冲突位置。
+
+## 授权边界
+
+- 普通源码、文档和只读检查可按用户任务直接执行。
+- 删除文件、覆盖已有配置或资源、修改包依赖、修改 ProjectSettings、切换平台、真实构建、导表写入生产目录、发布、提交或推送前，必须明确目标和范围；已有计划或预览不等于已授权执行。
+- Unity 写入先明确本工程内的目标、输入和影响范围；支持 `dry_run` 时使用原生命令预览。普通对象、组件及资源操作按用户任务和已有授权直接通过 MCP 或 CLI 执行；删除、覆盖、设置、依赖、平台和真实构建遵守上一条授权要求。使用 Workflow 时才执行其 preview、approve、apply 流程；命令超时后先查询真实状态，不自动重放。
+- Luban 生产导表使用 `python .agents/scripts/workflow.py luban preview`、`approve`、`apply`；`validate` 和隔离回归不会写入生产目录。
+- 无法连接当前 DGame Editor、缺少工具或测试没有可运行用例时，记录 blocked 和原因，不使用其他工程或旧结果替代。
+- Workflow 不自动安装或升级工具，不修改用户级技能或其他用户级设置。
+- 不自动提交、推送、上传、签名或发布（`/implement`、`/implement-spec` 的例外见“Matt 工作流衔接”）；CLI 的 `confirm` 参数和本地审批记录不能替代用户授权。
+- 不使用已停用的旧工作流、旧 Unity MCP 或其他项目的验证结果替代当前 DGame 证据。
+
+同一会话中已经核对过的主题可以复用摘要；只有涉及新主题或发现文档与源码冲突时才重新查询。
+
+工作流、环境版本和验证矩阵见 [.agents/README.md](.agents/README.md)，Unity 命令以当前 MCP 工具描述、CLI 帮助和注册命令为准，Workflow 命令以 `.agents/scripts/workflow.py --help` 为准。L4、跨模块、配置导表、Unity 写入、构建和发布类任务必须使用 [.agents/templates/task.md](.agents/templates/task.md) 记录目标、授权、决策、验证证据和剩余风险；L1/L2 小改可不创建任务文件。
+
+### 项目特有技能路由
+
+涉及 Fantasy 服务端 / Unity 客户端、ECS、协议、Roaming、跨服事件、HTTP、数据库或分布式运行时架构时，读取 `.agents/skills/fantasy-net/SKILL.md` 及其对应 reference；该 skill 适用于本仓库的 `GameServer/`、`GameUnity/Assets/Scripts/HotFix/Fantasy.Unity/`、`GameUnity/Assets/Scripts/HotFix/GameBattle/` 和协议工具链。
+
+## 设计与实现原则
+
+1. **精简界面**（适用于界面和交互任务）：删除多余的标语、说明文字和次要标签。删除后若界面难以理解，应先重新设计布局或信息结构，不用文字堆叠弥补结构问题。
+2. **兼顾三类体验**：每次修改都要检查以下三项，并在提案、任务记录或评审说明中用 1/2/3 编号呈现；按任务规模决定说明深度。除非任务明确要求，不得破坏当前需求和已有功能：
+   1. 用户体验：信息清楚、操作顺畅、反馈及时。
+   2. 开发体验：结构清晰、改动易维护、验证路径明确。
+   3. AI Agent 使用体验：规则和接口易发现、描述无歧义、执行步骤可验证。
+3. **精简技能文档**：技能描述使用简洁、易懂的文字，删除重复和次要内容。删减后若无法理解，应重写信息结构和说明，而不是继续堆叠文字。
+4. **保持代码简洁**：优先用清晰、简单、可维护的实现完成需求。先确认底层是否已有容错处理，再决定是否补充；避免无意义的 `try/catch`、`if/return` 和其他冗余代码。
+5. **确认开发阶段**：修改或重构前，依据项目文档、任务要求或负责人确认判断项目是否处于开发阶段。开发阶段可按新方案移除仅服务于旧版本的代码、历史数据和兼容分支，并使用新数据验证；当前需求功能仍需通过验收。非开发阶段则先评估兼容性，再决定迁移或保留策略。
+
+### 任务等级
+
+| 等级 | 判断标准 | 默认动作 |
+|------|----------|----------|
+| **L1 简单** | typo、注释、日志文案、单行变量改名，且不涉及框架 API、资源路径、事件、配置或工具链 | 可跳过 skill，直接处理 |
+| **L2 调用** | 调用已知 API、单模块局部修改 | 读取对应 skill 主题 |
+| **L3 功能** | 新功能、跨文件修改、新增资源、事件或模块逻辑 | 读取完整相关 skill；涉及配置先读 `luban-dev` |
+| **L4 架构** | 模块设计、系统重构、多模块协作或架构决策 | 读取完整相关 skill 和 reference，并明确验收条件 |
+
+不确定时上调一级。用户明确要求优先于本文件；安全、权限和不可逆操作仍需按项目规则取得相应确认。
+
+## Review 重点
+
+- 优先检查可复现的源码 API、路径、签名和文档冲突。
+- 重点检查资源与事件生命周期、Luban 模板与生成产物漂移、序列化兼容性以及程序集边界。
+- 构建、导表和测试必须报告实际命令、结果、阻塞原因和剩余风险；命令返回成功不等于业务验证通过。
+
+## 通用编码准则
+
+### 先理解再编码
+
+- 明确假设、边界和成功标准；存在多种解释时说明取舍。
+- 先搜索当前调用点和实现，不把文档或记忆当成 API 保证。
+
+### 保持简单
+
+- 只实现请求范围内的最小改动，不为单次使用增加抽象或配置项。
+- 不为不可能发生的情况添加复杂错误处理。
+
+### 手术式修改
+
+- 只修改与任务直接相关的文件和行，保持现有代码风格。
+- 由本次修改产生的未使用导入、变量或函数应一并清理；不删除预先存在的无关代码。
+
+### 以目标验证
+
+- 修复问题时先确定可复现条件，再用针对性检查确认修复。
+- 多阶段任务为每一步指定验证方式；无法验证时明确说明限制。
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues on `fuyuoo/DGame-Framework` (always pass `-R fuyuoo/DGame-Framework`). See `Docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five roles: needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix. See `Docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: root `GLOSSARY.md` + `Docs/adr/`. See `Docs/agents/domain.md`.
+
+### Matt 工作流衔接
+
+`/grill-with-docs` → `/to-spec` → `/to-tickets` → `/implement` 或 `/implement-spec` 负责流程；每一步的领域内容仍按上文路由读取 `dgame-dev`、`fantasy-net`、`luban-dev`。
+
+- **grill**：推荐答案先依据对应 reference 给出。首轮固定确认：落位层（GameLogic / GameBattle / 服务端 Entity·Hotfix）、Entity 所属 Scene、通信方式（Outer·Inner / Address / Roaming / SphereEvent）、是否涉及配置表。
+- **spec**：Implementation Decisions 注明各部分所属技能和适用红线；测试接缝只选能实际运行的：Unity EditMode/PlayMode 测试、`dotnet build` 或服务端测试。
+- **tickets**：纵向切片通常是“协议 → 服务端 Handler → 客户端 Session → UI”；每张 ticket 注明所需技能和验证命令。协议导出或 Luban 导表单独成票并前置。
+- **实现**：所有 ticket 在主 checkout 中按 frontier 顺序串行实现，不创建 worktree、不并行启动实现子代理（Unity Editor 只绑定主工程路径，且 Editor 操作必须串行）。`/implement-spec` 的集成分支直接在主 checkout 上创建。
+- **授权**：调用 `/implement`、`/implement-spec` 即授权在当前分支或集成分支自动提交和合并；推送、开 PR、生产导表仍需单独确认。
