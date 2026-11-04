@@ -24,8 +24,10 @@ dotnet %LUBAN_DLL% ^
     -x outputSaver.bin.cleanUpOutputDir=1 ^
     -x outputSaver.json.cleanUpOutputDir=1 ^
     -x outputSaver.cs-bin.cleanUpOutputDir=1
+set "GEN_EXIT_CODE=%ERRORLEVEL%"
 
 :: 后置：清理本次生成的临时拆分文件，保持 Datas 干净
 :: python "%CONF_ROOT%\Tools\split_sheets.py" --datas "%CONF_ROOT%\Datas" --clean
 
 if not defined AUTO_CONTINUE pause
+exit /b %GEN_EXIT_CODE%

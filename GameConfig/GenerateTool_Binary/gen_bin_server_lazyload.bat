@@ -20,4 +20,6 @@ dotnet %LUBAN_DLL% ^
     -x outputSaver.bin.cleanUpOutputDir=1 ^
     -x outputSaver.json.cleanUpOutputDir=1 ^
     -x outputSaver.cs-bin.cleanUpOutputDir=1
+set "GEN_EXIT_CODE=%ERRORLEVEL%"
 if not defined AUTO_CONTINUE pause
+exit /b %GEN_EXIT_CODE%

@@ -36,7 +36,7 @@
         {
             "name": "all",
             "manager": "Tables",
-            "groups": ["c,s,e"],
+            "groups": ["c", "s", "e"],
             "topModule": "GameProto"
         }
     ]

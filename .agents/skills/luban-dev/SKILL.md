@@ -32,10 +32,10 @@ description: DGame Luban 游戏配置全栈工具，支持枚举/Bean/数据表/
 | `gen_bin_client` | 客户端（标准模板） | 非懒加载 |
 | `gen_bin_server_lazyload` | 服务端（LazyLoad 模板） | 代码到 `GameServer/Server/Entity/Generate/Config/`，数据到 `GameServer/Configs/Binary`、`Json`，并复制 `CustomTemplate/Server/Bin/ConfigSystem.cs` |
 | `gen_bin_server` | 服务端（标准模板） | 非懒加载 |
-| `gen_bin_all_lazyload` | 客户端 + 服务端（LazyLoad 模板） | 人工双击用：结尾无条件 `pause`，AI 改为依次调用 client、server |
+| `gen_bin_all_lazyload` | 客户端 + 服务端（LazyLoad 模板） | 一键导出两端，任一端失败即返回非 0 |
 | `gen_bin_all` | 客户端 + 服务端（标准模板） | 同上，非懒加载 |
 
-除 `gen_bin_client_lazyload` 外，脚本不传递 Luban 退出码（失败也返回 0），调用后必须检查输出中的错误。客户端和服务端共用同一份配置源，改表后两端都要导，避免两端数据不一致。
+所有脚本都返回 Luban 退出码；设置 `AUTO_CONTINUE` 时不暂停。客户端和服务端共用同一份配置源，改表后两端都要导，避免两端数据不一致。
 
 ### AI 调用导表命令
 
